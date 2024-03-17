@@ -1,0 +1,10 @@
+F:\EMBEDDED\MCP\Programming\LeHungViet_MockPRJ\CMSIS/core_cm0plus.h:733:22:__NVIC_EnableIRQ	16	static
+../drivers/uart/Src/KL46_uart.c:18:6:UART0_RxEnable	16	static
+../drivers/uart/Src/KL46_uart.c:30:20:UART0_TxEnable	16	static
+../drivers/uart/Src/KL46_uart.c:42:6:UART0_Init	40	static
+../drivers/uart/Src/KL46_uart.c:150:18:UART0_SendChar	24	static
+../drivers/uart/Src/KL46_uart.c:182:18:UART0_SendString	48	static
+../drivers/uart/Src/KL46_uart.c:198:18:UART0_ReceiveCharBlocking	24	static
+../drivers/uart/Src/KL46_uart.c:216:6:UART0_ReceiveCharNonBlocking	8	static
+../drivers/uart/Src/KL46_uart.c:224:6:UART0_IRQHandler	8	static
+../drivers/uart/Src/KL46_uart.c:236:6:UART0_Update_Rx_Handler	16	static
