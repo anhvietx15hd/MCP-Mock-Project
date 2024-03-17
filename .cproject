@@ -292,7 +292,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.919162514" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.22223337" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.manage.290973558" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.423307146" name="Linker script" superClass="com.crt.advproject.link.script" value="LeHungViet_MockPRJ_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.423307146" name="Linker script" superClass="com.crt.advproject.link.script" value="MKL46Z4_Project_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.906591431" name="Script path" superClass="com.crt.advproject.link.scriptdir" value="" valueType="string"/>
 								<option id="com.crt.advproject.link.crpenable.1768795192" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.525723891" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -654,7 +654,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.1560731640" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.2107742337" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.manage.1249433636" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1477225784" name="Linker script" superClass="com.crt.advproject.link.script" value="LeHungViet_MockPRJ_Release.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1477225784" name="Linker script" superClass="com.crt.advproject.link.script" value="MKL46Z4_Project_Release.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.695323523" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.844752907" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.1297003597" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -699,7 +699,22 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="LeHungViet_MockPRJ.null.760401620" name="LeHungViet_MockPRJ" projectType="com.crt.advproject.projecttype.exe"/>
+		<project id="MKL46Z4_Project.null.938117658" name="MKL46Z4_Project" projectType="com.crt.advproject.projecttype.exe"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.2059349405;com.crt.advproject.config.exe.release.2059349405.;com.crt.advproject.gas.exe.release.1403498118;com.crt.advproject.assembler.input.440989013">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.2059349405;com.crt.advproject.config.exe.release.2059349405.;com.crt.advproject.gcc.exe.release.1842691627;com.crt.advproject.compiler.input.1144267740">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1655286835;com.crt.advproject.config.exe.debug.1655286835.;com.crt.advproject.gas.exe.debug.1074147994;com.crt.advproject.assembler.input.1828387479">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1655286835;com.crt.advproject.config.exe.debug.1655286835.;com.crt.advproject.gcc.exe.debug.640287593;com.crt.advproject.compiler.input.1732297371">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
@@ -744,19 +759,4 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="openCmsis"/>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.232354377;com.crt.advproject.config.exe.release.232354377.;com.crt.advproject.gas.exe.release.1338342927;com.crt.advproject.assembler.input.1175422371">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1921354211;com.crt.advproject.config.exe.debug.1921354211.;com.crt.advproject.gas.exe.debug.726110467;com.crt.advproject.assembler.input.2063752241">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1921354211;com.crt.advproject.config.exe.debug.1921354211.;com.crt.advproject.gcc.exe.debug.464162778;com.crt.advproject.compiler.input.1922352833">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.232354377;com.crt.advproject.config.exe.release.232354377.;com.crt.advproject.gcc.exe.release.281303452;com.crt.advproject.compiler.input.1284490410">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 </cproject>
