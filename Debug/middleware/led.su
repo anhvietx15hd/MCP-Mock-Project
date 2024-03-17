@@ -1,0 +1,4 @@
+../middleware/led.c:3:6:led_init	40	static
+../middleware/led.c:21:14:led_on	24	static
+../middleware/led.c:32:14:led_off	24	static
+../middleware/led.c:43:14:led_toggle	24	static

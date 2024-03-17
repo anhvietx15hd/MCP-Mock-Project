@@ -1,5 +1,0 @@
-../drivers/timer/Src/Kl46_timer.c:13:6:Systick_Timer_Init	8	static
-../drivers/timer/Src/Kl46_timer.c:26:6:Systick_Timer_Delay	16	static
-../drivers/timer/Src/Kl46_timer.c:34:13:Systick_Timer_Enable	8	static
-../drivers/timer/Src/Kl46_timer.c:38:13:Systick_Timer_Disable	8	static
-../drivers/timer/Src/Kl46_timer.c:42:6:SysTick_Handler	8	static

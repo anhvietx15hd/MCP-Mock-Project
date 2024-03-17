@@ -1,4 +1,0 @@
-../drivers/clock/Src/KL46_clock.c:8:6:Clock_Port_Enable	16	static
-../drivers/clock/Src/KL46_clock.c:30:6:Clock_Port_Diable	16	static
-../drivers/clock/Src/KL46_clock.c:52:6:Clock_UART0_Enable	8	static
-../drivers/clock/Src/KL46_clock.c:56:6:Clock_UART0_Diable	8	static

@@ -1,0 +1,6 @@
+../MKL46_Driver/gpio.c:11:6:GPIO_Init	24	static
+../MKL46_Driver/gpio.c:28:6:GPIO_WritePin	16	static
+../MKL46_Driver/gpio.c:37:15:GPIO_ReadPin	16	static
+../MKL46_Driver/gpio.c:45:6:GPIO_ClearPin	16	static
+../MKL46_Driver/gpio.c:53:6:GPIO_SetPin	16	static
+../MKL46_Driver/gpio.c:61:6:GPIO_TogglePin	16	static

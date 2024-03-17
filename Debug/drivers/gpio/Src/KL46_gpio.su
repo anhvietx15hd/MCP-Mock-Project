@@ -1,4 +1,0 @@
-../drivers/gpio/Src/KL46_gpio.c:9:6:GPIO_Pin_Init	24	static
-../drivers/gpio/Src/KL46_gpio.c:29:6:GPIO_Toggle_Pin	16	static
-../drivers/gpio/Src/KL46_gpio.c:37:6:GPIO_Set_Pin	16	static
-../drivers/gpio/Src/KL46_gpio.c:45:6:GPIO_Clear_Pin	16	static

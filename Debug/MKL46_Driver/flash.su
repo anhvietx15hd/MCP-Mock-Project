@@ -1,0 +1,5 @@
+../MKL46_Driver/flash.c:14:6:FLASH_Write32	16	static
+../MKL46_Driver/flash.c:39:9:FLASH_Read8	16	static
+../MKL46_Driver/flash.c:44:10:FLASH_Read32	16	static
+../MKL46_Driver/flash.c:49:10:FLASH_ReadBuffer	16	static
+../MKL46_Driver/flash.c:54:6:FLASH_EraseSector	16	static

@@ -15,14 +15,8 @@ OBJS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 CMSIS \
-drivers/clock/Src \
-drivers/flash/Src \
-drivers/gpio/Src \
-drivers/port/Src \
-drivers/timer/Src \
-drivers/uart/Src \
-middle/BIOS/Src \
-middle/devices/Src \
+MKL46_Driver \
+middleware \
 source \
 startup \
 

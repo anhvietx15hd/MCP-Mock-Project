@@ -1,0 +1,6 @@
+../MKL46_Driver/clock.c:10:6:CLOCK_PortEnable	24	static
+../MKL46_Driver/clock.c:17:9:CLOCK_CheckPortEnable	24	static
+../MKL46_Driver/clock.c:24:6:CLOCK_PITEnable	8	static
+../MKL46_Driver/clock.c:29:10:CLOCK_GetBusClock	16	static
+../MKL46_Driver/clock.c:37:6:CLOCK_ADCEnable	16	static
+../MKL46_Driver/clock.c:45:6:CLOCK_UART0Enable	8	static

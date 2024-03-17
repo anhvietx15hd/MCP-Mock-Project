@@ -1,0 +1,4 @@
+../middleware/SREC_parse.c:25:16:char2num	24	static
+../middleware/SREC_parse.c:36:6:SREC_Parse	24	static
+../middleware/SREC_parse.c:189:9:SREC_Load_Done	24	static
+../middleware/SREC_parse.c:202:15:SREC_Get_Status	8	static

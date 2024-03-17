@@ -1,0 +1,7 @@
+../middleware/KL46_bios.c:50:6:BIOS_main	8	static
+../middleware/KL46_bios.c:57:13:BIOS_Handler	16	static
+../middleware/KL46_bios.c:66:13:BIOS_Cmd_Handler	24	static
+../middleware/KL46_bios.c:102:13:BIOS_Reset_Cmd_Buffer	16	static
+../middleware/KL46_bios.c:111:17:String2Hexa	24	static
+../middleware/KL46_bios.c:132:13:BIOS_Load	16	static
+../middleware/KL46_bios.c:150:13:BIOS_Erase	16	static

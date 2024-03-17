@@ -1,0 +1,4 @@
+D:\MCU_E\workplace\MKL46Z4_Project\CMSIS/core_cm0plus.h:733:22:__NVIC_EnableIRQ	16	static
+../MKL46_Driver/port.c:42:6:PORT_Init	24	static
+../MKL46_Driver/port.c:87:6:PORTC_PORTD_IRQHandler	16	static
+../MKL46_Driver/port.c:116:6:PORTA_IRQHandler	16	static
