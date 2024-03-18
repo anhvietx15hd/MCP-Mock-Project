@@ -24,6 +24,7 @@ void UART0_RxEnable(uint8_t status)
 	else
 	{
 		UART0->C2 &= ~UART0_C2_RE_MASK;
+		rxData = UART0->D;
 	}
 }
 
@@ -199,7 +200,7 @@ UART_Status_Type UART0_ReceiveCharBlocking(uint8_t* rxChar, uint32_t timeout)
 {
 	UART_Status_Type status = UART_TIMEOUT;
 
-	UART0_RxEnable(0);
+	UART0_RxEnable(1);
 
 	while((UART0->S1 & UART0_S1_RDRF_MASK) == 0U && --timeout);
 	if ((UART0->S1 & UART0_S1_RDRF_MASK) == 0U)

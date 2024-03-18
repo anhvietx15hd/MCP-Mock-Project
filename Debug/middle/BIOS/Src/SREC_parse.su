@@ -1,0 +1,5 @@
+../middle/BIOS/Src/SREC_parse.c:29:16:char2num	24	static
+../middle/BIOS/Src/SREC_parse.c:40:17:swap_endian	16	static
+../middle/BIOS/Src/SREC_parse.c:47:6:SREC_Parse	24	static
+../middle/BIOS/Src/SREC_parse.c:199:9:SREC_Load_Done	24	static
+../middle/BIOS/Src/SREC_parse.c:217:15:SREC_Get_Status	8	static

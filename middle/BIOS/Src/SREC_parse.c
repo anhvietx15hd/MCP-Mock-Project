@@ -37,6 +37,13 @@ static uint8_t char2num(uint8_t ch)
 	return ret;
 }
 
+static uint32_t swap_endian(uint32_t val) {
+    return ((val & 0x000000FF) << 24) |
+           ((val & 0x0000FF00) << 8) |
+           ((val & 0x00FF0000) >> 8) |
+           ((val & 0xFF000000) >> 24);
+}
+
 void SREC_Parse(uint8_t ch)
 {
 	switch (status)
@@ -121,7 +128,7 @@ void SREC_Parse(uint8_t ch)
 					if (idx >= 8) {
 						dataString[idx] = '\0';
 						data = (uint32_t)strtoul(dataString, NULL, 16);
-						Program_LongWord(address + 4 * dataIdx, data);
+						Program_LongWord(address + 4 * dataIdx, swap_endian(data));
 
 						dataIdx++;
 						idx = 0;

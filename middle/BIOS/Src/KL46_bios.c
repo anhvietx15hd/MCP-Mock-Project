@@ -41,17 +41,46 @@ static void BIOS_Handler(uint8_t data);
  */
 static void BIOS_Cmd_Handler(void);
 static void BIOS_Reset_Cmd_Buffer(void);
- void BIOS_Load(void);
+static uint32_t BIOS_Load(void);
 static void BIOS_Erase(uint32_t address);
 static uint32_t String2Hexa(uint8_t* str, uint8_t len);
 /*STATIC PROTOTYPES END------------------------------------------------------------*/
 
 /*DEFINITIONS BEGIN----------------------------------------------------------------*/
+void bootloader_jump_to_address(uint32_t address)
+{
+    typedef void (*app_reset_handler)(void);
+    app_reset_handler resethandler_address;
+    uint32_t FLASH_SECTOR2_BASE_ADDRESS = address;
+
+    //disbale interuppts
+    __disable_irq();
+    /*Set the vector table address off set*/
+    SCB->VTOR = FLASH_SECTOR2_BASE_ADDRESS; //0xA000
+
+    uint32_t msp_value = *(__IO uint32_t *)FLASH_SECTOR2_BASE_ADDRESS;
+    __set_MSP(msp_value);
+
+    resethandler_address = *(__IO uint32_t *) (FLASH_SECTOR2_BASE_ADDRESS + 4);
+    /*Reset the address of vector table*/
+    resethandler_address();
+}
+
 void BIOS_main(void) {
     //Overload the handler funtion to handle user command
     UART0_Update_Rx_Handler(&BIOS_Handler);
     //Start receiving
     UART0_ReceiveCharNonBlocking();
+
+    while(1)
+    {
+    	if (system_current_status == FLASH)
+    	{
+    		uint32_t address = BIOS_Load();
+    		system_current_status = APPLICATION;
+    		bootloader_jump_to_address(address);
+    	}
+    }
 }
 
 static void BIOS_Handler(uint8_t data) {
@@ -82,7 +111,7 @@ static void BIOS_Cmd_Handler(void) {
         }
         /*Handle the command*/
         if(strcmp(cmd, CMD_dictionry[0]) == 0) {
-            BIOS_Load();
+        	system_current_status = FLASH;
         } else if (strcmp(cmd, CMD_dictionry[1]) == 0) {
             BIOS_Erase(String2Hexa(address, strlen(address)));
         } else {
@@ -129,27 +158,24 @@ static uint32_t String2Hexa(uint8_t* str, uint8_t len) {
     return result;
 }
 
- void BIOS_Load(void) {
-	system_current_status = FLASH;
+static uint32_t BIOS_Load(void) {
 	uint32_t load_address = 0;
 
-	UART0_SendString("LOADING\n", sizeof("LOADING\n"), 0);
-
-	UART0_RxEnable(0);
-
 	UART0_Update_Rx_Handler(&SREC_Parse);
-	UART0_ReceiveCharNonBlocking();
 
+    UART0_SendString("LOADING\n", sizeof("LOADING\n"), 0);
+
+	UART0_ReceiveCharNonBlocking();
 	while(!SREC_Load_Done(&load_address));
 
-	if (!load_address)
-	{
+	UART0_RxEnable(0);
+	UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE\n"), 0);
+
+	if (!load_address) {
 		UART0_SendString("LOAD ERROR\n", sizeof("LOAD ERROR\n"), 0);
 	}
 
-	UART0_RxEnable(0);
-
-	UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE\n"), 0);
+	return load_address;
 }
 
 static void BIOS_Erase(uint32_t address) {

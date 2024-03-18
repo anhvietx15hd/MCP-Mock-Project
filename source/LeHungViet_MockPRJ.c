@@ -9,17 +9,16 @@
 #include "KL46_bios.h"
 
 void main(void) {
+	Erase_Multi_Sector(0xa000, 10);
     Device_UART0_Init(9600);
     UART0_SendChar('A', 0);
     UART0_SendChar('\n', 0);
 
-//    BIOS_main();
-    BIOS_Load();
-    
+    BIOS_main();
 
-    while (1) {
-        // UART0_SendString("Hello\n", 6, 0);
-        // Systick_Timer_Delay(200);
+    while (1)
+    {
+
     }
 
     /*Idea
