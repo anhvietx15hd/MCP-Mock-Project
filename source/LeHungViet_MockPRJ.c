@@ -10,8 +10,11 @@
 
 void main(void) {
     Device_UART0_Init(9600);
+    UART0_SendChar('A', 0);
+    UART0_SendChar('\n', 0);
 
-    BIOS_main();
+//    BIOS_main();
+    BIOS_Load();
     
 
     while (1) {
