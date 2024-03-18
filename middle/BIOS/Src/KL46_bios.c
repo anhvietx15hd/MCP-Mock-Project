@@ -67,6 +67,7 @@ void bootloader_jump_to_address(uint32_t address)
 }
 
 void BIOS_main(void) {
+	UART0_SendString("bios\n", sizeof("bios\n"), 0);
     //Overload the handler funtion to handle user command
     UART0_Update_Rx_Handler(&BIOS_Handler);
     //Start receiving

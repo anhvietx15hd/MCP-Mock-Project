@@ -7,18 +7,75 @@
  */
 #include "KL46_device.h"
 #include "KL46_bios.h"
+#include "KL46_pit.h"
+#include "KL46_port.h"
 
-void main(void) {
+#define SW1_PORT		PORTC
+#define SW1_PIN			3U
+#define SW2_PORT		PORTC
+#define SW2_PIN			12U
+
+uint32_t check = 0;
+extern void app1_main();
+static void PIT_Handler(PIT_Channel_Type channel);
+static void Button_Handler(uint8_t pin);
+
+PIT_Config_Type PitConf = {
+		.timeout = 3000,
+		.pCallback = &PIT_Handler,
+		.tie = PIT_TIE_ENABLE,
+};
+
+PORT_Pin_Config_t ButtonConf = {
+		.mux = PORT_MUX_GPIO,
+		.pull = PORT_PULL_UP,
+		.callback = &Button_Handler,
+		.irqc = PORT_INTERRUPT_FAILLING_EDGE,
+};
+
+static void PIT_Handler(PIT_Channel_Type channel)
+{
+	PIT_StopTimer(PIT_CHANNEL_0);
+	check = 1;
+}
+
+static void Button_Handler(uint8_t pin)
+{
+	ButtonConf.irqc = PORT_IRQC_DISABLE;
+	PORT_Pin_Init(SW1_PORT, SW1_PIN, &ButtonConf);
+	check = 2;
+	PIT_StopTimer(PIT_CHANNEL_0);
+}
+
+void main(void)
+{
 	Erase_Multi_Sector(0xa000, 10);
+
     Device_UART0_Init(9600);
     UART0_SendChar('A', 0);
     UART0_SendChar('\n', 0);
 
-    BIOS_main();
+    PIT_Init(PIT_CHANNEL_0, &PitConf);
+
+    PORT_Pin_Init(SW1_PORT, SW1_PIN, &ButtonConf);
+    PORT_Enable_Interrupt(SW1_PORT);
+
+    PIT_StartTimer(PIT_CHANNEL_0);
 
     while (1)
     {
-
+    	if(check)
+    	{
+    		if (check == 1)
+    		{
+    			app1_main();
+    		}
+    		else if (check == 2)
+    		{
+    			BIOS_main();
+    		}
+    		check = 0;
+    	}
     }
 
     /*Idea

@@ -5,14 +5,17 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../source/LeHungViet_MockPRJ.c \
+../source/app1.c \
 ../source/mtb.c 
 
 C_DEPS += \
 ./source/LeHungViet_MockPRJ.d \
+./source/app1.d \
 ./source/mtb.d 
 
 OBJS += \
 ./source/LeHungViet_MockPRJ.o \
+./source/app1.o \
 ./source/mtb.o 
 
 
@@ -28,7 +31,7 @@ source/%.o: ../source/%.c source/subdir.mk
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/LeHungViet_MockPRJ.d ./source/LeHungViet_MockPRJ.o ./source/mtb.d ./source/mtb.o
+	-$(RM) ./source/LeHungViet_MockPRJ.d ./source/LeHungViet_MockPRJ.o ./source/app1.d ./source/app1.o ./source/mtb.d ./source/mtb.o
 
 .PHONY: clean-source
 

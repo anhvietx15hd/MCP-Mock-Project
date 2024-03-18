@@ -187,7 +187,6 @@ void SREC_Parse(uint8_t ch)
 
 	if (status == SREC_ERROR)
 	{
-		__disable_irq();
 		UART0_SendString(mess, strlen(mess), 0);
 		if (app_address) {
 			Erase_Multi_Sector(app_address, 10);

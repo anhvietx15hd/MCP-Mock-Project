@@ -56,6 +56,19 @@ void Clock_UART0_Enable(void) {
 void Clock_UART0_Diable(void) {
     SIM->SCGC4 &= (~SIM_SCGC4_UART0_MASK);
 }
+
+void CLOCK_PITEnable()
+{
+	SIM->SCGC6 |= SIM_SCGC6_PIT(1U);
+}
+
+uint32_t CLOCK_GetBusClock()
+{
+	SystemCoreClockUpdate();
+	uint32_t outdiv4 = (SIM->CLKDIV1 & SIM_CLKDIV1_OUTDIV4_MASK) >> SIM_CLKDIV1_OUTDIV4_SHIFT;
+	uint32_t bus_clock = SystemCoreClock/(outdiv4+1);
+	return bus_clock;
+}
 /*DEFINITIONS END------------------------------------------------------------------*/
 
 /*END OF FILE----------------------------------------------------------------------*/

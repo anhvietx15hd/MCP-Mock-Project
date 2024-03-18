@@ -1,8 +1,8 @@
 ../middle/BIOS/Src/KL46_bios.c:50:6:bootloader_jump_to_address	32	static
 ../middle/BIOS/Src/KL46_bios.c:69:6:BIOS_main	16	static
-../middle/BIOS/Src/KL46_bios.c:86:13:BIOS_Handler	16	static
-../middle/BIOS/Src/KL46_bios.c:95:13:BIOS_Cmd_Handler	24	static
-../middle/BIOS/Src/KL46_bios.c:131:13:BIOS_Reset_Cmd_Buffer	16	static
-../middle/BIOS/Src/KL46_bios.c:140:17:String2Hexa	24	static
-../middle/BIOS/Src/KL46_bios.c:161:17:BIOS_Load	16	static
-../middle/BIOS/Src/KL46_bios.c:181:13:BIOS_Erase	16	static
+../middle/BIOS/Src/KL46_bios.c:87:13:BIOS_Handler	16	static
+../middle/BIOS/Src/KL46_bios.c:96:13:BIOS_Cmd_Handler	24	static
+../middle/BIOS/Src/KL46_bios.c:132:13:BIOS_Reset_Cmd_Buffer	16	static
+../middle/BIOS/Src/KL46_bios.c:141:17:String2Hexa	24	static
+../middle/BIOS/Src/KL46_bios.c:162:17:BIOS_Load	16	static
+../middle/BIOS/Src/KL46_bios.c:182:13:BIOS_Erase	16	static

@@ -4,13 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../drivers/timer/Src/Kl46_timer.c 
+../drivers/timer/Src/KL46_pit.c \
+../drivers/timer/Src/KL46_timer.c 
 
 C_DEPS += \
-./drivers/timer/Src/Kl46_timer.d 
+./drivers/timer/Src/KL46_pit.d \
+./drivers/timer/Src/KL46_timer.d 
 
 OBJS += \
-./drivers/timer/Src/Kl46_timer.o 
+./drivers/timer/Src/KL46_pit.o \
+./drivers/timer/Src/KL46_timer.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -25,7 +28,7 @@ drivers/timer/Src/%.o: ../drivers/timer/Src/%.c drivers/timer/Src/subdir.mk
 clean: clean-drivers-2f-timer-2f-Src
 
 clean-drivers-2f-timer-2f-Src:
-	-$(RM) ./drivers/timer/Src/Kl46_timer.d ./drivers/timer/Src/Kl46_timer.o
+	-$(RM) ./drivers/timer/Src/KL46_pit.d ./drivers/timer/Src/KL46_pit.o ./drivers/timer/Src/KL46_timer.d ./drivers/timer/Src/KL46_timer.o
 
 .PHONY: clean-drivers-2f-timer-2f-Src
 
