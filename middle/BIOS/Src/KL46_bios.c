@@ -5,6 +5,7 @@
 #include <string.h>
 #include "KL46_flash.h"
 #include "KL46_bios.h"
+#include "SREC_parse.h"
 /*INCLUDES END---------------------------------------------------------------------*/
 #ifndef NULL
 #define NULL ((void *)0)
@@ -40,7 +41,7 @@ static void BIOS_Handler(uint8_t data);
  */
 static void BIOS_Cmd_Handler(void);
 static void BIOS_Reset_Cmd_Buffer(void);
-static void BIOS_Load(void);
+ void BIOS_Load(void);
 static void BIOS_Erase(uint32_t address);
 static uint32_t String2Hexa(uint8_t* str, uint8_t len);
 /*STATIC PROTOTYPES END------------------------------------------------------------*/
@@ -57,7 +58,7 @@ static void BIOS_Handler(uint8_t data) {
     /*Store to buffer*/
     s_cmd_buffer[s_received_count] = data;
     ++ s_received_count;
-    if((data == '>') || (s_received_count >= BIOS_CMD_BUFFER_MAX_SIZE)) {
+    if((data == 'e') || (s_received_count >= BIOS_CMD_BUFFER_MAX_SIZE)) {
         BIOS_Cmd_Handler();
     }
 }
@@ -66,7 +67,7 @@ static void BIOS_Cmd_Handler(void) {
     /*Disable Receiver*/
     UART0_RxEnable(0);
     /*Check the validation of user command*/
-    if((s_cmd_buffer[0] == '<') && (s_cmd_buffer[s_received_count - 1] == '>')) {
+    if((s_cmd_buffer[0] == 'b') && (s_cmd_buffer[s_received_count - 1] == 'e')) {
         /*Extract cmd and address*/
         uint8_t* cmd = s_cmd_buffer + 1;  /*Skip the first character is <*/
         uint8_t* address;
@@ -128,11 +129,29 @@ static uint32_t String2Hexa(uint8_t* str, uint8_t len) {
     return result;
 }
 
-static void BIOS_Load(void) {
-    // system_current_status = FLASH;
-    Program_LongWord(0xA000, 0x12345678);
-    UART0_RxEnable(1);
+ void BIOS_Load(void) {
+	system_current_status = FLASH;
+	uint32_t load_address = 0;
+
+	UART0_SendString("LOADING\n", sizeof("LOADING\n"), 0);
+
+	UART0_RxEnable(0);
+
+	UART0_Update_Rx_Handler(&SREC_Parse);
+	UART0_ReceiveCharNonBlocking();
+
+	while(!SREC_Load_Done(&load_address));
+
+	if (!load_address)
+	{
+		UART0_SendString("LOAD ERROR\n", sizeof("LOAD ERROR\n"), 0);
+	}
+
+	UART0_RxEnable(0);
+
+	UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE\n"), 0);
 }
+
 static void BIOS_Erase(uint32_t address) {
     if(((address >= 0x400) && (address < 0x7ff)) || (address == 0)){
         return;
