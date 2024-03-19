@@ -22,17 +22,15 @@ static void Button_Handler(uint8_t pin);
 
 void main(void)
 {
-	Erase_Multi_Sector(0xa000, 10);
-
-    Device_UART0_Init(9600);
+	Device_UART0_Init(9600);
     UART0_SendChar('A', 0);
     UART0_SendChar('\n', 0);
 
-    PIT_Config_Type PitConf = {
-    		.timeout = 3000,
-    		.pCallback = &PIT_Handler,
-    		.tie = PIT_TIE_ENABLE,
-    };
+   PIT_Config_Type PitConf = {
+   		.timeout = 3000,
+   		.pCallback = &PIT_Handler,
+   		.tie = PIT_TIE_ENABLE,
+   };
 
     PORT_Pin_Config_t ButtonConf = {
     		.mux = PORT_MUX_GPIO,
@@ -54,7 +52,8 @@ void main(void)
     	{
     		if (check == 1)
     		{
-    			app1_main();
+				bootloader_jump_to_address(0xA000);
+    			// app1_main();
     		}
     		if (check == 2)
     		{
@@ -63,11 +62,6 @@ void main(void)
     		check = 0;
     	}
     }
-
-    /*Idea
-    * Giới hạn số từ trong lệnh
-    * Khi bắt được ký tự kết thúc lệnh hay đạt giới hạn lệnh -> diable RX và xử lý lệnh, xử lý xong enble lại
-    * Sửa lại code để gen baudrate cao hơn*/
 }
 
 static void PIT_Handler(PIT_Channel_Type channel)

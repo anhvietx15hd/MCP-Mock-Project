@@ -237,6 +237,22 @@ void UART0_IRQHandler()
 void UART0_Update_Rx_Handler(UART0_Callback RxCallback) {
     RxCompleteCallback = RxCallback;
 }
+
+void UART0_DeInit(void) {
+	UART0_RxEnable(0);
+	UART0_TxEnable(0);
+	NVIC_DisableIRQ(UART0_IRQn);
+
+	SIM->SOPT2 &= (~SIM_SOPT2_UART0SRC_MASK);
+	UART0->BDH = 0;
+	UART0->BDL = (1<<2);
+	UART0->C1 = 0;
+	UART0->C2 = 0;
+	UART0->C3 = 0;
+
+
+	Clock_UART0_Diable();
+}
 /*DEFINITIONS END------------------------------------------------------------------*/
 
 /*END OF FILE----------------------------------------------------------------------*/

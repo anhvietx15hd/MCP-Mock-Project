@@ -103,6 +103,8 @@ void UART0_ReceiveCharNonBlocking();
 void UART0_RxEnable(uint8_t status);
 
 void UART0_Update_Rx_Handler(UART0_Callback RxCallback);
+
+void UART0_DeInit(void);
 /*APIs END-------------------------------------------------------------------*/
 
 #endif /*_UART_H_*/

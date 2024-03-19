@@ -79,6 +79,10 @@ void BIOS_main(void) {
     	{
     		uint32_t address = BIOS_Load();
     		system_current_status = APPLICATION;
+
+//Edited by HungViet
+            UART0_DeInit();
+
     		bootloader_jump_to_address(address);
     	}
     }
@@ -183,7 +187,7 @@ static void BIOS_Erase(uint32_t address) {
     if(((address >= 0x400) && (address < 0x7ff)) || (address == 0)){
         return;
     } else {
-        Erase_Sector(address);
+        Erase_Multi_Sector(address, 10);
     }
 }
 

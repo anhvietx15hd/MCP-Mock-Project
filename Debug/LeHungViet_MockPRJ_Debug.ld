@@ -5,7 +5,7 @@
  * Generated linker script file for MKL46Z256xxx4
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.9.0 [Build 2144] [2024-01-05] on Mar 19, 2024, 11:00:03 AM
+ * MCUXpresso IDE v11.9.0 [Build 2144] [2024-01-05] on Mar 20, 2024, 1:31:58 AM
  */
 
 INCLUDE "LeHungViet_MockPRJ_Debug_library.ld"
@@ -47,6 +47,7 @@ SECTIONS
         /* End of Kinetis Flash Configuration data */
         
        *(.text*)
+       KEEP(*freertos*/tasks.o(.rodata*)) /* FreeRTOS Debug Config */
        *(.rodata .rodata.* .constdata .constdata.*)
        . = ALIGN(4);
     } > PROGRAM_FLASH
