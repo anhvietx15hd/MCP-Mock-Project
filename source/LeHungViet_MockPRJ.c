@@ -72,7 +72,6 @@ void main(void)
 
 static void PIT_Handler(PIT_Channel_Type channel)
 {
-	PIT_StopTimer(PIT_CHANNEL_0);
 	PIT_DeInit(PIT_CHANNEL_0);
 	PORT_Pin_DeInit(SW1_PORT, SW1_PIN);
 	check = 1;
@@ -80,7 +79,6 @@ static void PIT_Handler(PIT_Channel_Type channel)
 
 static void Button_Handler(uint8_t pin)
 {
-	PIT_StopTimer(PIT_CHANNEL_0);
 	PIT_DeInit(PIT_CHANNEL_0);
 	PORT_Pin_DeInit(SW1_PORT, SW1_PIN);
 	check = 2;
