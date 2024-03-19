@@ -100,5 +100,7 @@ void PORT_Clear_ISF(PORT_Type* PORTx, uint8_t pin_number);
  */
 uint8_t PORT_Read_ISF(PORT_Type* PORTx, uint8_t pin_number);
 
+void PORT_Pin_DeInit(PORT_Type* PORTx, uint8_t pin_number);
+
 #endif /*_PORT_H_*/
 /*EOF----------------------------------------------------------------------*/

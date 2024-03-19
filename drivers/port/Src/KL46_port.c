@@ -42,6 +42,17 @@ void PORT_Pin_Init(PORT_Type* PORTx, uint8_t pin_number, PORT_Pin_Config_t* conf
     }
 }
 
+void PORT_Pin_DeInit(PORT_Type* PORTx, uint8_t pin_number)
+{
+    PORTx->PCR[pin_number] &= (~ (PORT_PCR_MUX_MASK | PORT_PCR_IRQC_MASK | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK)); /*Clear*/
+	PORTx->PCR[pin_number] |= (PORT_PCR_IRQC(PORT_IRQC_DISABLE));
+	if(PORTx == PORTA) {
+		NVIC_DisableIRQ(PORTA_IRQn);
+	} else {
+		 NVIC_DisableIRQ(PORTC_PORTD_IRQn);
+	}
+}
+
 void PORT_Enable_Interrupt(PORT_Type* PORTx){
     /*Only port A C D have Interuprt*/
     assert((PORTx == PORTA) || (PORTx == PORTC) || (PORTx == PORTD));

@@ -65,3 +65,5 @@ void PIT_StartTimer(PIT_Channel_Type channel);
  * @param channel The PIT channel to stop the timer for.
  */
 void PIT_StopTimer(PIT_Channel_Type channel);
+
+void PIT_DeInit(PIT_Channel_Type channel);

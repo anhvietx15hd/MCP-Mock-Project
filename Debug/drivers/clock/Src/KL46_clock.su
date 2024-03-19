@@ -3,4 +3,5 @@
 ../drivers/clock/Src/KL46_clock.c:52:6:Clock_UART0_Enable	8	static
 ../drivers/clock/Src/KL46_clock.c:56:6:Clock_UART0_Diable	8	static
 ../drivers/clock/Src/KL46_clock.c:60:6:CLOCK_PITEnable	8	static
-../drivers/clock/Src/KL46_clock.c:65:10:CLOCK_GetBusClock	16	static
+../drivers/clock/Src/KL46_clock.c:65:6:CLOCK_PITDisable	8	static
+../drivers/clock/Src/KL46_clock.c:70:10:CLOCK_GetBusClock	16	static

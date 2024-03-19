@@ -35,6 +35,11 @@ void Clock_UART0_Enable(void);
  * \brief           Diable clock for UART0 peripheral
  */
 void Clock_UART0_Diable(void);
+
+
+void CLOCK_PITEnable();
+void CLOCK_PITDisable();
+uint32_t CLOCK_GetBusClock();
 /*APIs END-------------------------------------------------------------------*/
 
 #endif /*_CLOCK_H_*/

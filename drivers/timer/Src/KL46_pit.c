@@ -58,6 +58,15 @@ void PIT_Init(PIT_Channel_Type channel, PIT_Config_Type* config)
 	}
 }
 
+void PIT_DeInit(PIT_Channel_Type channel)
+{
+	NVIC_EnableIRQ(PIT_IRQn);
+	PIT->MCR &= ~PIT_MCR_MDIS_MASK;
+	PIT->CHANNEL[channel].TCTRL &= ~PIT_TCTRL_CHN_MASK;
+	PIT->CHANNEL[channel].LDVAL = 0;
+	PIT->CHANNEL[channel].TCTRL &= ~PIT_TCTRL_TIE_MASK;
+}
+
 void PIT_ChangeReload(PIT_Channel_Type channel, PIT_Config_Type* config, uint32_t time_ms)
 {
 	assert(IS_PIT_CHANNEL_TYPE(channel));

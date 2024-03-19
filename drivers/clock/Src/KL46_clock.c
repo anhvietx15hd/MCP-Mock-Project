@@ -62,6 +62,11 @@ void CLOCK_PITEnable()
 	SIM->SCGC6 |= SIM_SCGC6_PIT(1U);
 }
 
+void CLOCK_PITDisable()
+{
+	SIM->SCGC6 &= ~SIM_SCGC6_PIT_MASK;
+}
+
 uint32_t CLOCK_GetBusClock()
 {
 	SystemCoreClockUpdate();
