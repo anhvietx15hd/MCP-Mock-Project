@@ -15,6 +15,17 @@
 #include <stdint.h>
 /*Prototypes*/
 
+ typedef enum {
+     ADD                          = 0U,
+     DELETE                       = 1U,
+ } App_Actiont_t;
+
+ typedef struct
+ {
+ 	uint32_t app_address;
+ 	uint8_t app_size;
+ } App_Info_t;
+
 /**
  * \brief           Handle BIOS mode for application setting 
  */

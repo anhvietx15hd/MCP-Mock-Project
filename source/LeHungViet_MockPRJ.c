@@ -21,7 +21,6 @@ static void Button_Handler(uint8_t pin);
 
 void main(void)
 {
-//	Erase_Sector()
 	Device_UART0_Init(115200);
     UART0_SendChar('A', 0);
     UART0_SendChar('\n', 0);
@@ -45,6 +44,23 @@ void main(void)
     PORT_Enable_Interrupt(SW1_PORT);
 
     PIT_StartTimer(PIT_CHANNEL_0);
+
+//	Erase_Sector(0x3fc00);
+//
+//	App_Info_t app1 = {1,2};
+//	App_Info_t app2 = {3,4};
+//	App_Info_t app3 = {5,6};
+//
+//	 App_Show();
+//	 App_Action(app1, ADD);
+//	 App_Action(app2, ADD);
+//	 App_Action(app3, ADD);
+//	 App_Show();
+//	 App_Action(app1, DELETE);
+//	 App_Show();
+//
+//	 App_Info_t app;
+//	 App_Get_Info(1, &app);
 
     while (1)
     {
