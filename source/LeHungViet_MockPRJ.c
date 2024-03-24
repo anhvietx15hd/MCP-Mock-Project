@@ -22,7 +22,7 @@ static void Button_Handler(uint8_t pin);
 
 void main(void)
 {
-	Device_UART0_Init(256000);
+	Device_UART0_Init(150000);
     UART0_SendChar('A', 0);
     UART0_SendChar('\n', 0);
 

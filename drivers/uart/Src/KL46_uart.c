@@ -119,21 +119,6 @@ void UART0_Init(UART_Config_Type* config)
 	UART0_RxEnable(0);
 	UART0_TxEnable(0);
 
-	// // MCG->C2 |= MCG_C2_IRCS(1U);				// fast
-	// // MCG->SC |= MCG_SC_FCRDIV(1U);			// 4M / 2 = 2M
-	// // MCG->C1 |= MCG_C1_IRCLKEN(1U);			// MCGIRCLK active
-	// SIM->SOPT2 |= SIM_SOPT2_UART0SRC(3U);	// MCGIRCLK - Fast clk
-
-	// uint16_t sbr = 2000000/(float)(config->baudrate)/4;
-
-	// /* SBR */
-	// UART0->BDL = sbr & 0xFF;
-	// UART0->BDH = (sbr & 0x1FFFU) >> 8U;
-
-	// /* OSR */
-	// UART0->C4 = (UART0->C4 & ~UART0_C4_OSR_MASK)| UART0_C4_OSR(3U);
-	// UART0->C5 |= UART0_C5_BOTHEDGE(1U); // both edge
-	 /*Find the best OSR value*/
     osr = UART_Find_OSR(config->baudrate);
     sbr = (uint16_t)((DEFAULT_SYSTEM_CLOCK ) / ((osr + 1) * config->baudrate));
 

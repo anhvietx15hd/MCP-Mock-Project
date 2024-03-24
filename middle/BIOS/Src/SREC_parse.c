@@ -21,17 +21,20 @@
 static char *mess = "SREC file is in wrong format\n";
 
 static volatile SREC_Status_t status = SREC_START;
-static uint32_t app_address = 0;
-static uint8_t idx = 0, dataIdx = 0;
-static uint8_t bytecount = 0, checksum = 0;
-static uint8_t address_digit;
-static uint8_t dataString[9] = {0}, bytecountString[3] = {0}, checksumString[3] = {0};
-static uint32_t address, data, sum;
-static uint8_t load_file_done = 0;
+static volatile uint32_t app_address = 0;
+static volatile uint8_t idx = 0, dataIdx = 0;
+static volatile uint8_t bytecount = 0, checksum = 0;
+static volatile uint8_t address_digit;
+static volatile uint8_t dataArray[4] = {0};
+static volatile uint32_t address, sum;
+static volatile uint8_t load_file_done = 0;
+static volatile uint8_t converted_number = 0;
 
 
 void SREC_Parse(uint8_t ch)
 {
+	converted_number = ASCII_TO_HEX(ch);
+
 	switch (status)
 	{
 		case SREC_START:
@@ -65,28 +68,28 @@ void SREC_Parse(uint8_t ch)
 			break;
 
 		case SREC_BYTECOUNT:
-			if (ASCII_TO_HEX(ch) != ASCII_ERROR) {
-				if (idx < 2) {
-					bytecountString[idx++] = ch;
-				}
-				if (idx >= 2) {
+			if (converted_number != ASCII_ERROR) {
+				if(idx == 0) {
+					bytecount = (converted_number <<4);
+					idx ++;
+				} else if (idx == 1) {
 					status = SREC_ADDRESS;
-					bytecountString[idx] = '\0';
-					bytecount = (uint8_t)strtoul(bytecountString, NULL, 16);
+					bytecount += converted_number;
 					sum += bytecount;
 					idx = address = 0;
-				}
+				} 
 			} else {
 				status = SREC_ERROR;
-				UART0_SendChar('3', 0);
+ 				UART0_SendChar('3', 0);
 			}
 			break;
 
+
 		case SREC_ADDRESS:
-			if (ASCII_TO_HEX(ch) != ASCII_ERROR)
+			if (converted_number != ASCII_ERROR)
 			{
 				if (idx < address_digit) {
-					address = ((address << 4) + ASCII_TO_HEX(ch));
+					address = ((address << 4) + converted_number);
 					idx++;
 				}
 				if (idx >= address_digit) {
@@ -102,19 +105,22 @@ void SREC_Parse(uint8_t ch)
 			break;
 
 		case SREC_DATA:
-			if (ASCII_TO_HEX(ch) != ASCII_ERROR) {
+			if (converted_number != ASCII_ERROR) {
 				if (bytecount - address_digit/2 >= 2) {
 					if (idx < 8) {
-						dataString[idx++] = ch;
+						/*Store each byte to array*/
 						if (idx % 2 == 0) {
+							dataArray[idx /2] = (converted_number << 4);
+							sum += (converted_number << 4);
+						} else {
+							dataArray[idx /2] += (converted_number);
 							bytecount--;
-							sum += ASCII_TO_HEX(dataString[idx-1]) + (ASCII_TO_HEX(dataString[idx-2]) << 4);
+							sum += converted_number;
 						}
+						idx ++;
 					}
 					if (idx >= 8) {
-						dataString[idx] = '\0';
-						data = (uint32_t)strtoul(dataString, NULL, 16);
-						Program_LongWord(address + 4 * dataIdx, data);
+						Program_LongWord_8B(address + 4 * dataIdx, dataArray);
 
 						dataIdx++;
 						idx = 0;
@@ -133,13 +139,11 @@ void SREC_Parse(uint8_t ch)
 
 		case SREC_CHECKSUM:
 			if (ASCII_TO_HEX(ch) != ASCII_ERROR) {
-				if (idx < 2) {
-					checksumString[idx++] = ch;
-				}
-				if (idx >= 2) {
-					checksumString[idx] = '\0';
-					checksum = (uint8_t)strtoul(checksumString, NULL, 16);
-
+				if (idx == 0) {
+					checksum = (ASCII_TO_HEX(ch) << 4);
+					idx ++;
+				} else {
+					checksum += ASCII_TO_HEX(ch);
 					if ((uint8_t)sum + checksum == 0xFF) {
 						idx = 0;
 						status = SREC_EOL;
@@ -164,7 +168,7 @@ void SREC_Parse(uint8_t ch)
 
 		case SREC_EOF:
 			load_file_done = 1;
-			UART0_RxEnable(false);
+			UART0_RxEnable(0);
 			break;
 
 		default:
