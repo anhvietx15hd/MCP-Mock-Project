@@ -23,6 +23,7 @@
 
 
 static char *mess = "FAIL TO FLASH\n";
+extern uint32_t first_empty_sector_address;
 
 static volatile SREC_Status_t status = SREC_START;
 static volatile uint32_t app_address = 0;
@@ -31,6 +32,7 @@ static volatile uint8_t bytecount = 0, checksum = 0;
 static volatile uint8_t address_digit;
 static volatile uint8_t dataArray[4] = {0};
 static volatile uint32_t address, sum;
+static volatile uint8_t app_size = 0;
 static volatile uint8_t load_file_done = 0;
 static volatile uint8_t converted_number = 0;
 
@@ -99,12 +101,21 @@ void SREC_Parse(uint8_t ch)
 				if (idx >= address_digit) {
 					status = SREC_DATA;
 					idx = dataIdx = 0;
-					if (app_address == 0) app_address = address;
-					/*Check if sector has been erased*/
-					if(START_OF_SECTOR(address) && (Read_FlashAddress(address) != 0xFFFFFFFFU)) {
-						status = SREC_APP_CONFLIC;
+					if (app_address == 0) {
+						app_address = address;
+						if(app_address < first_empty_sector_address) {
+							status = SREC_BOOT_CONFLIC;
+							break;
+						}
 					}
-					sum += (uint8_t)address + (uint8_t)(address >> 8);
+					/*Check if sector has been erased*/
+					if(START_OF_SECTOR(address)) {
+						app_size ++;
+						if(Read_FlashAddress(address) != 0xFFFFFFFFU) {
+							status = SREC_APP_CONFLIC;
+						}
+					}
+					sum += (uint8_t)address + (uint8_t)(address >> 8) + (uint8_t)(address >> 16) + (uint8_t)(address >> 24);
 				}
 			} else {
 				status = SREC_ERROR;
@@ -175,7 +186,10 @@ void SREC_Parse(uint8_t ch)
 			break;
 
 		case SREC_EOF:
-			load_file_done = 1;
+			if(app_address != 0U){
+				load_file_done = 1;
+			}
+			
 			UART0_RxEnable(0);
 			break;
 
@@ -185,29 +199,36 @@ void SREC_Parse(uint8_t ch)
 
 	if (status >= SREC_ERROR)
 	{
+		UART0_RxEnable(0);
+		
 		UART0_SendString(mess, strlen(mess), 0);
 		if (app_address) {
-			Erase_Multi_Sector(app_address, 10);
+			Erase_Multi_Sector(app_address, app_size);
 			app_address = 0;
+			app_size = 0;
 		}
 	}
 }
 
-uint8_t SREC_Load_Done(uint32_t* load_address)
+uint8_t SREC_Load_Done(App_Info_t* app_info)
 {
 	uint8_t ret = 0;
 	if (load_file_done)
 	{
 		ret = 1;
-		*load_address = app_address;
+		app_info->app_address = app_address;
+		app_info->app_size = app_size;
+		app_address = 0;
+		app_size = 0;
+		load_file_done = 0;
 	}
-	else if (status == SREC_ERROR)
+	else if (status >= SREC_ERROR)
 	{
 		status = SREC_START;
-		*load_address = 0;
+		app_info->app_address = 0;
+		app_info->app_size = 0;
 		ret = 2;
 	}
-
 	return ret;
 }
 

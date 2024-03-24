@@ -7,16 +7,11 @@
  */
 #include "KL46_device.h"
 #include "KL46_bios.h"
-
 uint32_t check = 0;
 
 void main(void)
 {
-	Device_UART0_Init(115200);
     Device_Startup();
-
-	Device_Timer_Init(3000);
-    Device_Timer_Start();
 
     while (1)
     {

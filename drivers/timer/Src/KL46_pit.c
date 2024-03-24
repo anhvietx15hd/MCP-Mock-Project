@@ -109,4 +109,3 @@ void PIT_IRQHandler()
 		PIT->CHANNEL[PIT_CHANNEL_1].TFLG = 1U;
 	}
 }
-

@@ -7,6 +7,9 @@
 #include "KL46_port.h"
 #include "KL46_device.h"
 /*INCLUDES END---------------------------------------------------------------------*/
+/*GLOBAL VARIABLES BEGIN-----------------------------------------------------------*/
+uint32_t first_empty_sector_address = 0;
+/*GLOBAL VARIABLES END-------------------------------------------------------------*/
 
 /*STATIC DEFINES BEGIN-----------------------------------------------------------*/
 #define SW1_PORT		PORTC
@@ -21,6 +24,7 @@ static volatile uint8_t count = 0;
 
 static void PIT_Handler(PIT_Channel_Type channel);
 static void Button_Handler(uint8_t pin);
+static uint32_t find_first_empty_sector_address(void);
 /*STATIC VARIABLES END-------------------------------------------------------------*/
 
 void received(uint8_t data);
@@ -88,9 +92,30 @@ void Device_Timer_Start() {
 }
 
 void Device_Startup(void) {
+    first_empty_sector_address = find_first_empty_sector_address();
+    Device_UART0_Init(19200);
     UART0_SendString("Welcome to G2\n", 14, 0);
+
+    Device_Timer_Init(3000);
+    Device_Timer_Start();
 }
 
+static uint32_t find_first_empty_sector_address(void) {
+    uint32_t sector_address;
+	uint32_t * sector_address_ptr = (uint32_t*)malloc(sizeof(uint32_t));
+
+	(*sector_address_ptr) = 0x00000800U; //start at sector 3
+
+	while ( (*(uint32_t*)*sector_address_ptr) != 0xFFFFFFFF )
+	{
+		(*sector_address_ptr) += 0x00000400U;
+	}
+
+	sector_address = (*sector_address_ptr);
+	free(sector_address_ptr);
+
+	return sector_address;
+}
 /*DEFINITIONS END------------------------------------------------------------------*/
 
 /*END OF FILE----------------------------------------------------------------------*/

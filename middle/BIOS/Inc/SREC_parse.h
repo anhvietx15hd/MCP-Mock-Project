@@ -24,10 +24,17 @@ typedef enum
 	SREC_EOL,
 	SREC_EOF, 
 	SREC_ERROR,
-	SREC_APP_CONFLIC
+	SREC_APP_CONFLIC,
+	SREC_BOOT_CONFLIC
 } SREC_Status_t;
 
-uint8_t SREC_Load_Done(uint32_t* load_address);
+ typedef struct
+ {
+ 	uint32_t app_address;
+ 	uint8_t app_size;
+ } App_Info_t;
+
+uint8_t SREC_Load_Done(App_Info_t* app_info);
 void SREC_Parse(uint8_t ch);
 
 
