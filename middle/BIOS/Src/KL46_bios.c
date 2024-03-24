@@ -28,6 +28,13 @@ typedef enum {
     APPLICATION                         = 2U
 } SYSTEM_STATUS_t;
 
+#define SWAP_ENDIAN_32(x) \
+    (((x) >> 24) & 0xff) |        /* Move byte 3 to byte 0 */ \
+    (((x) << 8) & 0xff0000) |     /* Move byte 1 to byte 2 */ \
+    (((x) >> 8) & 0xff00) |       /* Move byte 2 to byte 1 */ \
+    (((x) << 24) & 0xff000000)    /* Move byte 0 to byte 3 */
+
+
 static volatile SYSTEM_STATUS_t system_current_status = BIOS;
 /*STATIC VARIABLES END-------------------------------------------------------------*/
 
@@ -261,17 +268,18 @@ static void BIOS_App_Store(uint32_t app_address)
 
 	for (idx = 0; idx < app_number; idx++)
 	{
-		Program_LongWord(BIOS_APP_INFO + 8 * idx, tmp[idx]);
+		Program_LongWord(BIOS_APP_INFO + 8 * idx, SWAP_ENDIAN_32(tmp[idx]));
 	}
 
-	Program_LongWord(BIOS_APP_INFO + 8 * app_number, app_address);
+	Program_LongWord(BIOS_APP_INFO + 8 * app_number, SWAP_ENDIAN_32(app_address));
 
 	free(tmp);
 }
 
 static uint32_t Get_App_Address(uint8_t app_idx)
 {
-
+	uint32_t address = Read_FlashAddress(BIOS_APP_INFO + 8 * (app_idx - 1));
+	return address;
 }
 
 /*DEFINITIONS END------------------------------------------------------------------*/

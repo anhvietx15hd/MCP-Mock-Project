@@ -21,11 +21,8 @@ static void Button_Handler(uint8_t pin);
 
 void main(void)
 {
-<<<<<<< HEAD
+//	Erase_Sector()
 	Device_UART0_Init(115200);
-=======
-	Device_UART0_Init(150000);
->>>>>>> 93f18ee42cfe3efc931b3a400c7b89d4fb1971c0
     UART0_SendChar('A', 0);
     UART0_SendChar('\n', 0);
 

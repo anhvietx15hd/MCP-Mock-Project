@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 D:\MCU_E\workplace\mock\MCP-Mock-Project\CMSIS/core_cm0plus.h:733:22:__NVIC_EnableIRQ	16	static
 D:\MCU_E\workplace\mock\MCP-Mock-Project\CMSIS/core_cm0plus.h:769:22:__NVIC_DisableIRQ	16	static
-=======
-F:\EMBEDDED\MCP\Programming\LeHungViet_MockPRJ\CMSIS/core_cm0plus.h:733:22:__NVIC_EnableIRQ	16	static
-F:\EMBEDDED\MCP\Programming\LeHungViet_MockPRJ\CMSIS/core_cm0plus.h:769:22:__NVIC_DisableIRQ	16	static
->>>>>>> 93f18ee42cfe3efc931b3a400c7b89d4fb1971c0
 ../drivers/timer/Src/KL46_pit.c:27:17:ReloadValueCalculate	24	static
 ../drivers/timer/Src/KL46_pit.c:33:6:PIT_Init	24	static
 ../drivers/timer/Src/KL46_pit.c:61:6:PIT_DeInit	16	static
