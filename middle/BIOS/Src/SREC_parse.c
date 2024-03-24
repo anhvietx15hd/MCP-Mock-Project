@@ -15,6 +15,9 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#define ASCII_TO_HEX(ch) ((ch >= '0' && ch <= '9') ? (ch - '0') : \
+						    ((ch >= 'A' && ch <= 'F') ? (ch - 'A' + 10U) : (ASCII_ERROR)))
+
 static char *mess = "SREC file is in wrong format\n";
 
 static volatile SREC_Status_t status = SREC_START;
@@ -26,23 +29,6 @@ static uint8_t dataString[9] = {0}, bytecountString[3] = {0}, checksumString[3] 
 static uint32_t address, data, sum;
 static uint8_t load_file_done = 0;
 
-static uint8_t char2num(uint8_t ch)
-{
-	uint8_t ret = ERROR;
-	if (ch >= '0' && ch <= '9') {
-		ret = ch - '0';
-	} else if (ch >= 'A' && ch <= 'F') {
-		ret = ch - 'A' + 0xA;
-	}
-	return ret;
-}
-
-static uint32_t swap_endian(uint32_t val) {
-    return ((val & 0x000000FF) << 24) |
-           ((val & 0x0000FF00) << 8) |
-           ((val & 0x00FF0000) >> 8) |
-           ((val & 0xFF000000) >> 24);
-}
 
 void SREC_Parse(uint8_t ch)
 {
@@ -79,7 +65,7 @@ void SREC_Parse(uint8_t ch)
 			break;
 
 		case SREC_BYTECOUNT:
-			if (char2num(ch) != ERROR) {
+			if (ASCII_TO_HEX(ch) != ASCII_ERROR) {
 				if (idx < 2) {
 					bytecountString[idx++] = ch;
 				}
@@ -97,10 +83,10 @@ void SREC_Parse(uint8_t ch)
 			break;
 
 		case SREC_ADDRESS:
-			if (char2num(ch) != ERROR)
+			if (ASCII_TO_HEX(ch) != ASCII_ERROR)
 			{
 				if (idx < address_digit) {
-					address += char2num(ch) * pow(16, address_digit - 1 - idx);
+					address = ((address << 4) + ASCII_TO_HEX(ch));
 					idx++;
 				}
 				if (idx >= address_digit) {
@@ -116,19 +102,19 @@ void SREC_Parse(uint8_t ch)
 			break;
 
 		case SREC_DATA:
-			if (char2num(ch) != ERROR) {
+			if (ASCII_TO_HEX(ch) != ASCII_ERROR) {
 				if (bytecount - address_digit/2 >= 2) {
 					if (idx < 8) {
 						dataString[idx++] = ch;
 						if (idx % 2 == 0) {
 							bytecount--;
-							sum += char2num(dataString[idx-1]) + 16 * char2num(dataString[idx-2]);
+							sum += ASCII_TO_HEX(dataString[idx-1]) + (ASCII_TO_HEX(dataString[idx-2]) << 4);
 						}
 					}
 					if (idx >= 8) {
 						dataString[idx] = '\0';
 						data = (uint32_t)strtoul(dataString, NULL, 16);
-						Program_LongWord(address + 4 * dataIdx, swap_endian(data));
+						Program_LongWord(address + 4 * dataIdx, data);
 
 						dataIdx++;
 						idx = 0;
@@ -146,7 +132,7 @@ void SREC_Parse(uint8_t ch)
 			break;
 
 		case SREC_CHECKSUM:
-			if (char2num(ch) != ERROR) {
+			if (ASCII_TO_HEX(ch) != ASCII_ERROR) {
 				if (idx < 2) {
 					checksumString[idx++] = ch;
 				}
