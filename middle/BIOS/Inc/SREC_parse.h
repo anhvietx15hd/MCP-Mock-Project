@@ -21,9 +21,10 @@ typedef enum
 	SREC_ADDRESS,
 	SREC_DATA,
 	SREC_CHECKSUM,
-	SREC_ERROR,
 	SREC_EOL,
-	SREC_EOF
+	SREC_EOF, 
+	SREC_ERROR,
+	SREC_APP_CONFLIC
 } SREC_Status_t;
 
 uint8_t SREC_Load_Done(uint32_t* load_address);

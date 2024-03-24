@@ -17,8 +17,12 @@
 
 #define ASCII_TO_HEX(ch) ((ch >= '0' && ch <= '9') ? (ch - '0') : \
 						    ((ch >= 'A' && ch <= 'F') ? (ch - 'A' + 10U) : (ASCII_ERROR)))
+#define SECTOR_SIZE						(0x400U)
+#define SECTOR_SIZE_CHECK_MASK			(SECTOR_SIZE - 1U)
+#define START_OF_SECTOR(address)		((address & SECTOR_SIZE_CHECK_MASK) == 0)
 
-static char *mess = "SREC file is in wrong format\n";
+
+static char *mess = "FAIL TO FLASH\n";
 
 static volatile SREC_Status_t status = SREC_START;
 static volatile uint32_t app_address = 0;
@@ -96,6 +100,10 @@ void SREC_Parse(uint8_t ch)
 					status = SREC_DATA;
 					idx = dataIdx = 0;
 					if (app_address == 0) app_address = address;
+					/*Check if sector has been erased*/
+					if(START_OF_SECTOR(address) && (Read_FlashAddress(address) != 0xFFFFFFFFU)) {
+						status = SREC_APP_CONFLIC;
+					}
 					sum += (uint8_t)address + (uint8_t)(address >> 8);
 				}
 			} else {
@@ -175,7 +183,7 @@ void SREC_Parse(uint8_t ch)
 			break;
 	}
 
-	if (status == SREC_ERROR)
+	if (status >= SREC_ERROR)
 	{
 		UART0_SendString(mess, strlen(mess), 0);
 		if (app_address) {

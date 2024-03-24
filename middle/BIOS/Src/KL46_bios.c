@@ -16,7 +16,9 @@ static volatile uint8_t s_cmd_buffer[BIOS_CMD_BUFFER_MAX_SIZE];
 static volatile uint8_t s_received_count = 0U;
 static uint8_t* CMD_dictionry[] = {
     "LOAD",
-    "ERASE"
+    "ERASE",
+    "EXIT", 
+    "GO",
 };
 
 typedef enum {
@@ -26,6 +28,9 @@ typedef enum {
 } SYSTEM_STATUS_t;
 
 static volatile SYSTEM_STATUS_t system_current_status = BIOS;
+static uint8_t* welcome_mess = "Welcome to G2 BIOS\n";
+static uint8_t* hints = "<GO:[index]> to go to Application\n<ERASE:[index]> to erase an application\n<LOAD> to flash a new application\n<EXIT> to end the BIOS program\n";
+static uint8_t* erase_done_mess = "ERASE DONE\n";
 /*STATIC VARIABLES END-------------------------------------------------------------*/
 
 /*STATIC PROTOTYPES BEGIN----------------------------------------------------------*/
@@ -67,20 +72,20 @@ void bootloader_jump_to_address(uint32_t address)
 }
 
 void BIOS_main(void) {
-	UART0_SendString("bios\n", sizeof("bios\n"), 0);
+    system_current_status = BIOS;
+	UART0_SendString(welcome_mess, strlen(welcome_mess) , 0);
+    UART0_SendString(hints, 139, 0);
     //Overload the handler funtion to handle user command
     UART0_Update_Rx_Handler(&BIOS_Handler);
     //Start receiving
     UART0_ReceiveCharNonBlocking();
 
-    while(1)
+    while(system_current_status != APPLICATION)
     {
     	if (system_current_status == FLASH)
     	{
     		uint32_t address = BIOS_Load();
-    		system_current_status = APPLICATION;
 
-//Edited by HungViet
             UART0_DeInit();
 
     		bootloader_jump_to_address(address);
@@ -116,10 +121,21 @@ static void BIOS_Cmd_Handler(void) {
         }
         /*Handle the command*/
         if(strcmp(cmd, CMD_dictionry[0]) == 0) {
+            /*Go to flash mode*/
         	system_current_status = FLASH;
+
         } else if (strcmp(cmd, CMD_dictionry[1]) == 0) {
+            /*Erase application*/
             BIOS_Erase(String2Hexa(address, strlen(address)));
-        } else {
+            UART0_SendString(erase_done_mess, strlen(erase_done_mess), 0);
+        } 
+
+        else if (strcmp(cmd, CMD_dictionry[2]) == 0) {
+            /*Exit the bios*/
+            system_current_status = APPLICATION;
+
+        }
+        else {
             UART0_SendString("Invalid command\n", 17, 0);
         }
     } else {
@@ -168,16 +184,16 @@ static uint32_t BIOS_Load(void) {
 
 	UART0_Update_Rx_Handler(&SREC_Parse);
 
-    UART0_SendString("LOADING\n", sizeof("LOADING\n"), 0);
+    UART0_SendString("CHOOSE SREC FILE TO FLASH\n", sizeof("CHOOSE SREC FILE TO FLASH"), 0);
 
 	UART0_ReceiveCharNonBlocking();
 	while(!SREC_Load_Done(&load_address));
 
 	UART0_RxEnable(0);
-	UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE\n"), 0);
+	UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE"), 0);
 
 	if (!load_address) {
-		UART0_SendString("LOAD ERROR\n", sizeof("LOAD ERROR\n"), 0);
+		UART0_SendString("LOAD ERROR\n", sizeof("LOAD ERROR"), 0);
 	}
 
 	return load_address;
@@ -191,6 +207,10 @@ static void BIOS_Erase(uint32_t address) {
     }
 }
 
+
+void BIOS_Jump_To_Default_App(void) {
+    bootloader_jump_to_address(0xA000);
+}
 /*DEFINITIONS END------------------------------------------------------------------*/
 
 /*END OF FILE----------------------------------------------------------------------*/

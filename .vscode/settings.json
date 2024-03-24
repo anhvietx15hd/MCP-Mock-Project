@@ -3,6 +3,9 @@
         "assert.h": "c",
         "kl46_timer.h": "c",
         "kl46_device.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "kl46_bios.h": "c",
+        "kl46_pit.h": "c",
+        "kl46_port.h": "c"
     }
 }

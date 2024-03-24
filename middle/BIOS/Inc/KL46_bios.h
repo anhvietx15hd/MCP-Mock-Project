@@ -19,6 +19,7 @@
  * \brief           Handle BIOS mode for application setting 
  */
 void BIOS_main(void);
+void BIOS_Jump_To_Default_App(void);
 
 #ifdef __cplusplus
 }

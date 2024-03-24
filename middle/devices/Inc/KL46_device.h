@@ -15,10 +15,16 @@
 /*DEFINES BEGIN--------------------------------------------------------------*/
 
 /*DEFINES END----------------------------------------------------------------*/
+/*GLOBAL VARIABLES BEGIN--------------------------------------------------------------*/
+extern uint32_t check;
+/*GLOBAL VARIABLES  END----------------------------------------------------------------*/
 
 /*APIs BEGIN-----------------------------------------------------------------*/
 void Device_UART0_Init(uint32_t baudrate);
 void Device_ADC_Init();
+void Device_Timer_Init(uint16_t time);
+void Device_Timer_Start();
+void Device_Startup(void);
 /*APIs END-------------------------------------------------------------------*/
 
 #endif /*_DEVICE_H_*/
