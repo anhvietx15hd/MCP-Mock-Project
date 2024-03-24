@@ -54,12 +54,11 @@ static void BIOS_Reset_Cmd_Buffer(void);
 static uint32_t BIOS_Load(void);
 static void BIOS_Erase(uint32_t address);
 static uint32_t String2Hexa(uint8_t* str, uint8_t len);
-static uint8_t App_Count();
-static void App_Add(uint32_t app_address);
-static void App_Show();
-static void App_Get_Info(uint8_t app_idx, App_Info_t* app_info);
-static void App_Action(App_Info_t app_info, App_Actiont_t action);
 
+static uint8_t App_Count();
+static void App_Show();
+static void App_Action(App_Info_t app_info, App_Actiont_t action);
+void App_Get_Info(uint8_t app_idx, App_Info_t* app_info);
 
 /*STATIC PROTOTYPES END------------------------------------------------------------*/
 
@@ -136,6 +135,8 @@ static void BIOS_Cmd_Handler(void) {
         	system_current_status = FLASH;
         } else if (strcmp(cmd, CMD_dictionry[1]) == 0) {
             BIOS_Erase(String2Hexa(address, strlen(address)));
+            App_Info_t app = {.app_address = String2Hexa(address, strlen(address))};
+            App_Action(app, DELETE);
         } else {
             UART0_SendString("Invalid command\n", 17, 0);
         }
@@ -182,6 +183,7 @@ static uint32_t String2Hexa(uint8_t* str, uint8_t len) {
 
 static uint32_t BIOS_Load(void) {
 	uint32_t load_address = 0;
+	App_Info_t app;
 
 	UART0_Update_Rx_Handler(&SREC_Parse);
 
@@ -197,7 +199,10 @@ static uint32_t BIOS_Load(void) {
 		UART0_SendString("LOAD ERROR\n", sizeof("LOAD ERROR\n"), 0);
 	}
 	else {
-		App_Add(load_address);
+//		App_Add(load_address);
+		app.app_address = load_address;
+		app.app_size = 20;
+		App_Action(app, ADD);
 	}
 
 	return load_address;
@@ -254,29 +259,6 @@ static void App_Show()
 	}
 }
 
-static void App_Add(uint32_t app_address)
-{
-	uint8_t app_number = App_Count();
-	uint8_t idx;
-	uint32_t * tmp = (uint32_t *)malloc(app_number * sizeof(uint32_t));
-
-	for (idx = 0; idx < app_number; idx++)
-	{
-		tmp[idx] = Read_FlashAddress(BIOS_APP_INFO + 8 * idx);
-	}
-
-	Erase_Sector(BIOS_APP_INFO);
-
-	for (idx = 0; idx < app_number; idx++)
-	{
-		Program_LongWord(BIOS_APP_INFO + 8 * idx, SWAP_ENDIAN_32(tmp[idx]));
-	}
-
-	Program_LongWord(BIOS_APP_INFO + 8 * app_number, SWAP_ENDIAN_32(app_address));
-
-	free(tmp);
-}
-
 static void App_Action(App_Info_t app_info, App_Actiont_t action)
 {
 	uint8_t app_number = App_Count();
@@ -289,7 +271,7 @@ static void App_Action(App_Info_t app_info, App_Actiont_t action)
 		tmp_addr[idx] = Read_FlashAddress(BIOS_APP_INFO + 8 * idx);
 		tmp_size[idx] = Read_FlashAddress(BIOS_APP_INFO + 8 * idx + 4);
 
-		if (tmp_addr[idx] == app_info.app_address)
+		if (tmp_addr[idx] == app_info.app_address && action == DELETE)
 		{
 			app_idx = idx;
 		}
@@ -332,33 +314,7 @@ static void App_Action(App_Info_t app_info, App_Actiont_t action)
 	free(tmp_size);
 }
 
-//static void BIOS_App_Delete(uint32_t app_address)
-//{
-//	uint8_t i, j = 0;
-//	uint8_t app_number = BIOS_App_Count();
-//	uint32_t * tmp = (uint32_t *)malloc((app_number - 1) * sizeof(uint32_t));
-//	uint8_t app_idx = 0;
-//
-//	for (i = 0; i < app_number; i++)
-//	{
-//		if (Read_FlashAddress(BIOS_APP_INFO + 8 * idx) == app_address)
-//		{
-//			app_idx = i + 1;
-//		}
-//		else
-//		{
-//			tmp[j] = Read_FlashAddress(BIOS_APP_INFO + 8 * j);
-//			j++;
-//		}
-//	}
-//
-//	for (i = 0; i < j; i++)
-//	{
-//		Program_LongWord(BIOS_APP_INFO + 8 * i, SWAP_ENDIAN_32(tmp[i]));
-//	}
-//}
-
-static void App_Get_Info(uint8_t app_idx, App_Info_t* app_info)
+App_Get_Info(uint8_t app_idx, App_Info_t* app_info)
 {
 	app_info->app_address = Read_FlashAddress(BIOS_APP_INFO + 8 * app_idx - 8);
 	app_info->app_size = Read_FlashAddress(BIOS_APP_INFO + 8 * app_idx - 4);

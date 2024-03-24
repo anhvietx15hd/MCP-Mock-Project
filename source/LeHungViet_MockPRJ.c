@@ -22,7 +22,7 @@ static void Button_Handler(uint8_t pin);
 void main(void)
 {
 	Device_UART0_Init(115200);
-    UART0_SendChar('A', 0);
+    UART0_SendChar('B', 0);
     UART0_SendChar('\n', 0);
 
    PIT_Config_Type PitConf = {
@@ -59,8 +59,8 @@ void main(void)
 //	 App_Action(app1, DELETE);
 //	 App_Show();
 //
-//	 App_Info_t app;
-//	 App_Get_Info(1, &app);
+	 App_Info_t app;
+	 App_Get_Info(1, &app);
 
     while (1)
     {
@@ -68,7 +68,7 @@ void main(void)
     	{
     		if (check == 1)
     		{
-				bootloader_jump_to_address(0xA000);
+				bootloader_jump_to_address(app.app_address);
     			// app1_main();
     		}
     		if (check == 2)
