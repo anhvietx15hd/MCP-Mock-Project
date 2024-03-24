@@ -55,9 +55,11 @@ static uint32_t BIOS_Load(void);
 static void BIOS_Erase(uint32_t address);
 static uint32_t String2Hexa(uint8_t* str, uint8_t len);
 static uint8_t BIOS_App_Count();
-static void BIOS_App_Store(uint32_t app_address);
+static void BIOS_App_Add(uint32_t app_address);
+static void BIOS_App_Delete(uint32_t app_address);
 static void BIOS_App_Show();
 static uint32_t Get_App_Address(uint8_t app_idx);
+
 
 /*STATIC PROTOTYPES END------------------------------------------------------------*/
 
@@ -196,7 +198,7 @@ static uint32_t BIOS_Load(void) {
 		UART0_SendString("LOAD ERROR\n", sizeof("LOAD ERROR\n"), 0);
 	}
 	else {
-		BIOS_App_Store(load_address);
+		BIOS_App_Add(load_address);
 	}
 
 	return load_address;
@@ -253,7 +255,7 @@ static void BIOS_App_Show()
 	}
 }
 
-static void BIOS_App_Store(uint32_t app_address)
+static void BIOS_App_Add(uint32_t app_address)
 {
 	uint8_t app_number = BIOS_App_Count();
 	uint8_t idx;
