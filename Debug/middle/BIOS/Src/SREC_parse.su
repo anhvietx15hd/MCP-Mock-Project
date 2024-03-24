@@ -1,3 +1,8 @@
 ../middle/BIOS/Src/SREC_parse.c:34:6:SREC_Parse	24	static
+<<<<<<< HEAD
 ../middle/BIOS/Src/SREC_parse.c:189:9:SREC_Load_Done	24	static
 ../middle/BIOS/Src/SREC_parse.c:207:15:SREC_Get_Status	8	static
+=======
+../middle/BIOS/Src/SREC_parse.c:188:9:SREC_Load_Done	24	static
+../middle/BIOS/Src/SREC_parse.c:206:15:SREC_Get_Status	8	static
+>>>>>>> 93f18ee42cfe3efc931b3a400c7b89d4fb1971c0

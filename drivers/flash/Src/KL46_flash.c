@@ -65,10 +65,15 @@ uint8_t Program_LongWord(uint32_t Addr, uint32_t Data)
     FTFA->FCCOB3 = (uint8_t)(Addr >>0);
 
     /* fill Data */
-    FTFA->FCCOB4 = (uint8_t)(Data >>24);
-    FTFA->FCCOB5 = (uint8_t)(Data >>16);
-    FTFA->FCCOB6 = (uint8_t)(Data >>8);
-    FTFA->FCCOB7 = (uint8_t)(Data >>0);
+    FTFA->FCCOB4 = (uint8_t)(Data >>0);
+    FTFA->FCCOB5 = (uint8_t)(Data >>8);
+    FTFA->FCCOB6 = (uint8_t)(Data >>16);
+    FTFA->FCCOB7 = (uint8_t)(Data >>24);
+    // /* fill Data */
+    // FTFA->FCCOB4 = (uint8_t)(Data >>24);
+    // FTFA->FCCOB5 = (uint8_t)(Data >>16);
+    // FTFA->FCCOB6 = (uint8_t)(Data >>8);
+    // FTFA->FCCOB7 = (uint8_t)(Data >>0);
 
     /* Clear CCIF */
     FTFA->FSTAT = 0x80;

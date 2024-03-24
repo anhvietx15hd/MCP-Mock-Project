@@ -21,7 +21,11 @@ static void Button_Handler(uint8_t pin);
 
 void main(void)
 {
+<<<<<<< HEAD
 	Device_UART0_Init(115200);
+=======
+	Device_UART0_Init(150000);
+>>>>>>> 93f18ee42cfe3efc931b3a400c7b89d4fb1971c0
     UART0_SendChar('A', 0);
     UART0_SendChar('\n', 0);
 
@@ -76,3 +80,11 @@ static void Button_Handler(uint8_t pin)
 	PORT_Pin_DeInit(SW1_PORT, SW1_PIN);
 	check = 2;
 }
+
+/**
+ * Check the sector that if it is empty before flashing data to it
+ * Check if start address of App is conflic with the boot loader
+ * Check if the new app is conflic with others
+ * Show the list of app, start address, and size  on flash erea and let user choose the app by the index
+ * Add "Exit" command to bios
+ */

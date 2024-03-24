@@ -666,26 +666,11 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="LeHungViet_MockPRJ.null.760401620" name="LeHungViet_MockPRJ" projectType="com.crt.advproject.projecttype.exe"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.232354377;com.crt.advproject.config.exe.release.232354377.;com.crt.advproject.gas.exe.release.1338342927;com.crt.advproject.assembler.input.1175422371">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1921354211;com.crt.advproject.config.exe.debug.1921354211.;com.crt.advproject.gas.exe.debug.726110467;com.crt.advproject.assembler.input.2063752241">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1921354211;com.crt.advproject.config.exe.debug.1921354211.;com.crt.advproject.gcc.exe.debug.464162778;com.crt.advproject.compiler.input.1922352833">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.232354377;com.crt.advproject.config.exe.release.232354377.;com.crt.advproject.gcc.exe.release.281303452;com.crt.advproject.compiler.input.1284490410">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_FRDM-KL46Z</sdkName>
 		<sdkVersion>2.4.1</sdkVersion>
-		<sdkComponents>platform.Include_core_cm0plus.MKL46Z4;platform.devices.MKL46Z4_startup.MKL46Z4;platform.Include_common.MKL46Z4;platform.devices.MKL46Z4_CMSIS.MKL46Z4;</sdkComponents>
+		<sdkComponents>platform.Include_core_cm0plus.MKL46Z4;platform.Include_common.MKL46Z4;platform.utilities.debug_console.MKL46Z4;platform.devices.MKL46Z4_CMSIS.MKL46Z4;platform.drivers.common.MKL46Z4;platform.drivers.clock.MKL46Z4;middleware.freertos.MKL46Z4;platform.drivers.lptmr.MKL46Z4;platform.devices.MKL46Z4_startup.MKL46Z4;platform.devices.MKL46Z4_flash.MKL46Z4;platform.utilities.virtual_com.MKL46Z4;middleware.usb.device.MKL46Z4;middleware.usb.device_controller_khci.MKL46Z4;platform.utilities.assert.MKL46Z4;platform.drivers.lpsci.MKL46Z4;platform.drivers.uart.MKL46Z4;</sdkComponents>
 		<boardId>frdmkl46z</boardId>
 		<package>MKL46Z256VLL4</package>
 		<core>cm0plus</core>
@@ -717,4 +702,19 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="openCmsis"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.232354377;com.crt.advproject.config.exe.release.232354377.;com.crt.advproject.gas.exe.release.1338342927;com.crt.advproject.assembler.input.1175422371">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1921354211;com.crt.advproject.config.exe.debug.1921354211.;com.crt.advproject.gas.exe.debug.726110467;com.crt.advproject.assembler.input.2063752241">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1921354211;com.crt.advproject.config.exe.debug.1921354211.;com.crt.advproject.gcc.exe.debug.464162778;com.crt.advproject.compiler.input.1922352833">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.release.232354377;com.crt.advproject.config.exe.release.232354377.;com.crt.advproject.gcc.exe.release.281303452;com.crt.advproject.compiler.input.1284490410">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
 </cproject>

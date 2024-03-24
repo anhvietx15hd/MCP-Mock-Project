@@ -77,7 +77,7 @@ void SREC_Parse(uint8_t ch)
 					bytecount += converted_number;
 					sum += bytecount;
 					idx = address = 0;
-				}
+				} 
 			} else {
 				status = SREC_ERROR;
  				UART0_SendChar('3', 0);

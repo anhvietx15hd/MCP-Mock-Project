@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 ../source/LeHungViet_MockPRJ.c:22:6:main	40	static
 ../source/LeHungViet_MockPRJ.c:66:13:PIT_Handler	16	static
 ../source/LeHungViet_MockPRJ.c:73:13:Button_Handler	16	static
+=======
+../source/LeHungViet_MockPRJ.c:23:6:main	40	static
+../source/LeHungViet_MockPRJ.c:67:13:PIT_Handler	16	static
+../source/LeHungViet_MockPRJ.c:74:13:Button_Handler	16	static
+>>>>>>> 93f18ee42cfe3efc931b3a400c7b89d4fb1971c0
