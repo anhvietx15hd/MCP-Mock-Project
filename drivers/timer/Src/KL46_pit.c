@@ -60,7 +60,9 @@ void PIT_Init(PIT_Channel_Type channel, PIT_Config_Type* config)
 
 void PIT_DeInit(PIT_Channel_Type channel)
 {
-	NVIC_EnableIRQ(PIT_IRQn);
+	//Stop the PIT Timer
+	PIT->CHANNEL[channel].TCTRL &= (~ PIT_TCTRL_TEN_MASK);
+	NVIC_DisableIRQ(PIT_IRQn);
 	PIT->MCR &= ~PIT_MCR_MDIS_MASK;
 	PIT->CHANNEL[channel].TCTRL &= ~PIT_TCTRL_CHN_MASK;
 	PIT->CHANNEL[channel].LDVAL = 0;
@@ -107,4 +109,3 @@ void PIT_IRQHandler()
 		PIT->CHANNEL[PIT_CHANNEL_1].TFLG = 1U;
 	}
 }
-

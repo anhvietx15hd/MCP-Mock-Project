@@ -1,8 +1,9 @@
 D:\MCU_E\workplace\mock\MCP-Mock-Project\CMSIS/core_cm0plus.h:733:22:__NVIC_EnableIRQ	16	static
+D:\MCU_E\workplace\mock\MCP-Mock-Project\CMSIS/core_cm0plus.h:769:22:__NVIC_DisableIRQ	16	static
 ../drivers/timer/Src/KL46_pit.c:27:17:ReloadValueCalculate	24	static
 ../drivers/timer/Src/KL46_pit.c:33:6:PIT_Init	24	static
 ../drivers/timer/Src/KL46_pit.c:61:6:PIT_DeInit	16	static
-../drivers/timer/Src/KL46_pit.c:70:6:PIT_ChangeReload	40	static
-../drivers/timer/Src/KL46_pit.c:83:6:PIT_StartTimer	16	static
-../drivers/timer/Src/KL46_pit.c:89:6:PIT_StopTimer	24	static
-../drivers/timer/Src/KL46_pit.c:96:6:PIT_IRQHandler	8	static
+../drivers/timer/Src/KL46_pit.c:72:6:PIT_ChangeReload	40	static
+../drivers/timer/Src/KL46_pit.c:85:6:PIT_StartTimer	16	static
+../drivers/timer/Src/KL46_pit.c:91:6:PIT_StopTimer	24	static
+../drivers/timer/Src/KL46_pit.c:98:6:PIT_IRQHandler	8	static

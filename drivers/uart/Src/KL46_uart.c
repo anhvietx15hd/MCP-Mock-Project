@@ -5,14 +5,25 @@
 #include "KL46_port.h"
 #include "KL46_uart.h"
 /*INCLUDES END---------------------------------------------------------------------*/
+
+/*DEFINES BEGIN--------------------------------------------------------------------*/
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
+
+#define MIN_OSR							(3U)
+#define MAX_OSR							(31U)
+/*DEFINES END--------------------------------------------------------------------*/
+
 /*STATIC VARIABLES BEGIN-----------------------------------------------------------*/
 static UART0_Callback RxCompleteCallback = NULL;
 static UART0_Callback TxCompleteCallback = NULL;
 static volatile uint8_t rxData;
 /*STATIC VARIABLES END-------------------------------------------------------------*/
+
+/*STATIC PROTOTYPES BEGIN-----------------------------------------------------------*/
+static uint8_t UART_Find_OSR(uint32_t baudrate);
+/*STATIC PROTOTYPES END-------------------------------------------------------------*/
 
 /*DEFINITIONS BEGIN----------------------------------------------------------------*/
 void UART0_RxEnable(uint8_t status)
@@ -42,6 +53,11 @@ static inline void UART0_TxEnable(uint8_t status)
 
 void UART0_Init(UART_Config_Type* config)
 {
+
+	uint8_t osr;
+    uint16_t sbr;
+
+	SIM->SOPT2 |= SIM_SOPT2_UART0SRC(1U);  //MCGFLLCLK
 	Clock_UART0_Enable();
 
 	PORT_Pin_Config_t port_conf = {
@@ -103,20 +119,17 @@ void UART0_Init(UART_Config_Type* config)
 	UART0_RxEnable(0);
 	UART0_TxEnable(0);
 
-	MCG->C2 |= MCG_C2_IRCS(1U);				// fast
-	MCG->SC |= MCG_SC_FCRDIV(1U);			// 4M / 2 = 2M
-	MCG->C1 |= MCG_C1_IRCLKEN(1U);			// MCGIRCLK active
-	SIM->SOPT2 |= SIM_SOPT2_UART0SRC(3U);	// MCGIRCLK - Fast clk
+    osr = UART_Find_OSR(config->baudrate);
+    sbr = (uint16_t)((DEFAULT_SYSTEM_CLOCK ) / ((osr + 1) * config->baudrate));
 
-	uint16_t sbr = 2000000/(float)(config->baudrate)/4;
-
-	/* SBR */
-	UART0->BDL = sbr & 0xFF;
-	UART0->BDH = (sbr & 0x1FFFU) >> 8U;
-
-	/* OSR */
-	UART0->C4 = (UART0->C4 & ~UART0_C4_OSR_MASK)| UART0_C4_OSR(3U);
-	UART0->C5 |= UART0_C5_BOTHEDGE(1U); // both edge
+	/*Set the OSR at c4 register*/
+    UART0->C4 = osr;
+	if((osr >= 3) && (osr <= 6)) {
+		UART0->C5 |= UART0_C5_BOTHEDGE(1U); // both edge
+	}
+    // Set the Baud Rate Divisor
+    UART0->BDH = UART_BDH_SBR((sbr >> 8) & 0x1F);
+    UART0->BDL = UART_BDL_SBR(sbr & 0xFF);
 
 	if (config->dataLength != UART_DATA_10BIT)
 	{
@@ -236,6 +249,45 @@ void UART0_IRQHandler()
 
 void UART0_Update_Rx_Handler(UART0_Callback RxCallback) {
     RxCompleteCallback = RxCallback;
+}
+
+void UART0_DeInit(void) {
+	UART0_RxEnable(0);
+	UART0_TxEnable(0);
+	NVIC_DisableIRQ(UART0_IRQn);
+
+	SIM->SOPT2 &= (~SIM_SOPT2_UART0SRC_MASK);
+	UART0->BDH = 0;
+	UART0->BDL = (1<<2);
+	UART0->C1 = 0;
+	UART0->C2 = 0;
+	UART0->C3 = 0;
+
+
+	Clock_UART0_Diable();
+}
+
+static uint8_t UART_Find_OSR(uint32_t baud_rate){
+    uint8_t index;
+    uint8_t osr;
+    uint16_t error;
+    uint16_t sbr;
+    uint16_t min_error = 5000u;
+    uint32_t temp_baud_rate;
+    osr = MIN_OSR;
+    for(index = MIN_OSR; index <= MAX_OSR; index ++){
+        /*calculate sbr with osr*/
+        sbr = (uint16_t)(DEFAULT_SYSTEM_CLOCK / ((index + 1) * baud_rate));
+        /*calculate baudrate with recent sbr*/
+        temp_baud_rate = (uint32_t)(DEFAULT_SYSTEM_CLOCK / ((index + 1) * sbr));
+        /*find the best osr with smallest baud rate error*/
+        error = abs(temp_baud_rate - baud_rate);
+        if(error < min_error){
+            min_error = error;
+            osr = index;
+        }
+    }
+    return osr;
 }
 /*DEFINITIONS END------------------------------------------------------------------*/
 

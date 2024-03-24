@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-#define ERROR	16
+#define ASCII_ERROR	(16U)
 
 typedef enum
 {
