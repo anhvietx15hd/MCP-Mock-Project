@@ -105,7 +105,7 @@ void bootloader_jump_to_address(uint32_t address)
 }
 
 void BIOS_main(void) {
-	// Erase_Multi_Sector(0xA000, 10);
+//	 Erase_Multi_Sector(0xA000, 10);
     system_current_status = BIOS;
 	UART0_SendString(welcome_mess, strlen(welcome_mess) , 0);
     UART0_SendString(hints, 139, 0);
@@ -231,17 +231,16 @@ static void BIOS_Load(void) {
 
 	UART0_ReceiveCharNonBlocking();
 	while(!SREC_Load_Done(&app_info));
-
+	
 	UART0_RxEnable(0);
-	UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE"), 0);
-
+	system_current_status = BIOS;
 	if (!(app_info.app_address)) {
 		UART0_SendString("LOAD ERROR\n", sizeof("LOAD ERROR"), 0);
 	}
 	else {
+		UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE"), 0);
 		App_Action(app_info, ADD);
 		App_Show();
-		system_current_status = BIOS;
 		/*return to BIOS mode*/
 		UART0_Update_Rx_Handler(&BIOS_Handler);
 		UART0_ReceiveCharNonBlocking();

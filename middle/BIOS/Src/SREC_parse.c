@@ -110,9 +110,10 @@ void SREC_Parse(uint8_t ch)
 					}
 					/*Check if sector has been erased*/
 					if(START_OF_SECTOR(address)) {
-						app_size ++;
 						if(Read_FlashAddress(address) != 0xFFFFFFFFU) {
 							status = SREC_APP_CONFLIC;
+						} else {
+							app_size ++;
 						}
 					}
 					sum += (uint8_t)address + (uint8_t)(address >> 8) + (uint8_t)(address >> 16) + (uint8_t)(address >> 24);
