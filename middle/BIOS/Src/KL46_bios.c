@@ -81,7 +81,8 @@ void App_Get_Info(uint8_t app_idx, App_Info_t* app_info);
 /*DEFINITIONS BEGIN----------------------------------------------------------------*/
 void bootloader_jump_to_address(uint32_t address)
 {
-	/*Deinit*/
+	if(address != 0xFFFFFFFF) {
+		/*Deinit*/
 	UART0_DeInit();
     typedef void (*app_reset_handler)(void);
     app_reset_handler resethandler_address;
@@ -98,9 +99,13 @@ void bootloader_jump_to_address(uint32_t address)
     resethandler_address = *(__IO uint32_t *) (FLASH_SECTOR2_BASE_ADDRESS + 4);
     /*Reset the address of vector table*/
     resethandler_address();
+	} else {
+		BIOS_main();
+	}
 }
 
 void BIOS_main(void) {
+	// Erase_Multi_Sector(0xA000, 10);
     system_current_status = BIOS;
 	UART0_SendString(welcome_mess, strlen(welcome_mess) , 0);
     UART0_SendString(hints, 139, 0);
@@ -164,9 +169,8 @@ static void BIOS_Cmd_Handler(void) {
 			App_Info_t app_info;
 			App_Get_Info(String2Hexa(0, strlen(value)), &app_info);
 			s_jump_address = app_info.app_address;
-			
-
         }
+
 		else if (strcmp(cmd, CMD_dictionry[3]) == 0) {
             /*GO to application*/
             system_current_status = APPLICATION;
