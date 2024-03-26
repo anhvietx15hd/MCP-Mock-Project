@@ -47,7 +47,7 @@ void SREC_Parse(uint8_t ch)
 			if (ch == 'S') {
 				status = SREC_TYPE;
 			} else {
-				status = SREC_ERROR;
+				status = SREC_S_ERROR;
 				UART0_SendChar('5', 0);
 			}
 			break;
@@ -59,10 +59,11 @@ void SREC_Parse(uint8_t ch)
 				idx = dataIdx = sum = 0;
 			} else if (ch >= '7' && ch <= '9') {
 				status = SREC_EOF;
+				UART0_RxEnable(0);
 			} else if (ch == '0') {
 				status = SREC_HEADER;
 			} else {
-				status = SREC_ERROR;
+				status = SREC_TYPE_ERROR;
 				UART0_SendChar('4', 0);
 			}
 			break;
@@ -85,7 +86,7 @@ void SREC_Parse(uint8_t ch)
 					idx = address = 0;
 				} 
 			} else {
-				status = SREC_ERROR;
+				status = SREC_HEXA_ERROR;
  				UART0_SendChar('3', 0);
 			}
 			break;
@@ -118,7 +119,7 @@ void SREC_Parse(uint8_t ch)
 					sum += (uint8_t)address + (uint8_t)(address >> 8) + (uint8_t)(address >> 16) + (uint8_t)(address >> 24);
 				}
 			} else {
-				status = SREC_ERROR;
+				status = SREC_HEXA_ERROR;
 				UART0_SendChar('2', 0);
 			}
 			break;
@@ -151,7 +152,7 @@ void SREC_Parse(uint8_t ch)
 					}
 				}
 			} else {
-				status = SREC_ERROR;
+				status = SREC_HEXA_ERROR;
 				UART0_SendChar('0', 0);
 			}
 			break;
@@ -167,12 +168,12 @@ void SREC_Parse(uint8_t ch)
 						idx = 0;
 						status = SREC_EOL;
 					} else {
-						status = SREC_ERROR;
+						status = SREC_CHECKSUM_ERROR;
 						UART0_SendChar('s', 0);
 					}
 				}
 			} else {
-				status = SREC_ERROR;
+				status = SREC_HEXA_ERROR;
 				UART0_SendChar('1', 0);
 			}
 			break;
@@ -188,9 +189,10 @@ void SREC_Parse(uint8_t ch)
 		case SREC_EOF:
 			if(app_address != 0U){
 				load_file_done = 1;
-			}
+			}	
 			
 			UART0_RxEnable(0);
+
 			break;
 
 		default:
@@ -215,12 +217,14 @@ uint8_t SREC_Load_Done(App_Info_t* app_info)
 	uint8_t ret = 0;
 	if (load_file_done)
 	{
+		status = SREC_START;
 		ret = 1;
 		app_info->app_address = app_address;
 		app_info->app_size = app_size;
 		app_address = 0;
 		app_size = 0;
 		load_file_done = 0;
+
 	}
 	else if (status >= SREC_ERROR)
 	{

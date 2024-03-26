@@ -151,6 +151,7 @@ static void BIOS_Cmd_Handler(void) {
         if(strcmp(cmd, CMD_dictionry[0]) == 0) {
             /*Go to flash mode*/
         	system_current_status = FLASH;
+        	BIOS_Reset_Cmd_Buffer();
 
         } else if (strcmp(cmd, CMD_dictionry[1]) == 0) {
             /*Erase application*/
@@ -160,6 +161,10 @@ static void BIOS_Cmd_Handler(void) {
         else if (strcmp(cmd, CMD_dictionry[2]) == 0) {
             /*Exit the bios*/
             system_current_status = APPLICATION;
+			App_Info_t app_info;
+			App_Get_Info(String2Hexa(0, strlen(value)), &app_info);
+			s_jump_address = app_info.app_address;
+			
 
         }
 		else if (strcmp(cmd, CMD_dictionry[3]) == 0) {
@@ -176,10 +181,10 @@ static void BIOS_Cmd_Handler(void) {
         UART0_SendString("Invalid command\n", 17, 0);
     }
     
-    if(system_current_status != APPLICATION) {
+    if(system_current_status == BIOS) {
         /*Turn on RX for next Command*/
         BIOS_Reset_Cmd_Buffer();
-        UART0_RxEnable(1);
+        UART0_ReceiveCharNonBlocking();
     }
 }
 
@@ -290,7 +295,7 @@ static void App_Show()
 		for (idx = 0; idx < app_number; idx++)
 		{
 			App_Get_Info(idx+1, &app_info);
-			sprintf(str, "APP %d | ADDRESS 0x%08X | SIZE %03d\n", idx + 1, app_info.app_address, app_info.app_size);
+			sprintf(str, "APP %d | ADDRESS 0x%08X | SIZE %03d KB\n", idx + 1, app_info.app_address, app_info.app_size);
 			UART0_SendString(str, strlen(str), 0);
 		}
 	}
