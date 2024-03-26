@@ -22,8 +22,8 @@ uint32_t first_empty_sector_address = 0;
 static volatile uint8_t cur_data[6];
 static volatile uint8_t count = 0;
 
-static void PIT_Handler(PIT_Channel_Type channel);
-static void Button_Handler(uint8_t pin);
+void PIT_Handler(PIT_Channel_Type channel);
+void Button_Handler(void);
 static uint32_t find_first_empty_sector_address(void);
 /*STATIC VARIABLES END-------------------------------------------------------------*/
 
@@ -73,14 +73,14 @@ void Device_Timer_Init(uint16_t time) {
     PORT_Enable_Interrupt(SW1_PORT);
 }
 
-static void PIT_Handler(PIT_Channel_Type channel)
+void PIT_Handler(PIT_Channel_Type channel)
 {
 	PIT_DeInit(PIT_CHANNEL_0);
 	PORT_Pin_DeInit(SW1_PORT, SW1_PIN);
 	check = 1;
 }
 
-static void Button_Handler(uint8_t pin)
+void Button_Handler()
 {
 	PIT_DeInit(PIT_CHANNEL_0);
 	PORT_Pin_DeInit(SW1_PORT, SW1_PIN);
@@ -93,7 +93,7 @@ void Device_Timer_Start() {
 
 void Device_Startup(void) {
     first_empty_sector_address = find_first_empty_sector_address();
-    Device_UART0_Init(19200);
+    Device_UART0_Init(115200);
     UART0_SendString("Welcome to G2\n", 14, 0);
 
     Device_Timer_Init(3000);

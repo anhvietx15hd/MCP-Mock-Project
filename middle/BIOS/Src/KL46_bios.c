@@ -23,6 +23,7 @@
 #define BIOS_APP_INFO					(0x3FC00U)
 
 static volatile uint8_t s_cmd_buffer[BIOS_CMD_BUFFER_MAX_SIZE];
+static volatile uint32_t s_jump_address = 0;
 static volatile uint8_t s_received_count = 0U;
 extern uint32_t first_empty_sector_address;
 static uint8_t* CMD_dictionry[] = {
@@ -116,6 +117,8 @@ void BIOS_main(void) {
     		BIOS_Load();
     	}
     }
+
+	bootloader_jump_to_address(s_jump_address);
 }
 
 static void BIOS_Handler(uint8_t data) {
@@ -164,7 +167,7 @@ static void BIOS_Cmd_Handler(void) {
             system_current_status = APPLICATION;
 			App_Info_t app_info;
 			App_Get_Info(String2Hexa(value, strlen(value)), &app_info);
-			bootloader_jump_to_address(app_info.app_address);
+			s_jump_address = app_info.app_address;
 
         } else {
             UART0_SendString("Invalid command\n", 17, 0);
@@ -356,7 +359,7 @@ void App_Get_Info(uint8_t app_idx, App_Info_t* app_info)
 
 void BIOS_Jump_To_Default_App(void) {
 	App_Info_t app_info;
-	App_Get_Info(0, &app_info);
+	App_Get_Info(1, &app_info);
     bootloader_jump_to_address(app_info.app_address);
 }
 /*DEFINITIONS END------------------------------------------------------------------*/
