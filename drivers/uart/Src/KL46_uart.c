@@ -228,8 +228,10 @@ UART_Status_Type UART0_ReceiveCharBlocking(uint8_t* rxChar, uint32_t timeout)
 }
 
 void UART0_ReceiveCharNonBlocking()
-{
+{	
 	UART0->C2 |= UART0_C2_RIE(1U);
+	UART0->S1 |= UART0_S1_OR_MASK;
+	UART0->D;
 	NVIC_EnableIRQ(UART0_IRQn);
 
 	UART0_RxEnable(1);

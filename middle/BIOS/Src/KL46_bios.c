@@ -25,6 +25,7 @@
 static volatile uint8_t s_cmd_buffer[BIOS_CMD_BUFFER_MAX_SIZE];
 static volatile uint32_t s_jump_address = 0;
 static volatile uint8_t s_received_count = 0U;
+static volatile uint8_t s_is_receiving_cmd = 0;
 extern uint32_t first_empty_sector_address;
 static uint8_t* CMD_dictionry[] = {
     "LOAD",
@@ -128,66 +129,69 @@ void BIOS_main(void) {
 
 static void BIOS_Handler(uint8_t data) {
     /*Store to buffer*/
-    s_cmd_buffer[s_received_count] = data;
-    ++ s_received_count;
-    if((data == 'e') || (s_received_count >= BIOS_CMD_BUFFER_MAX_SIZE)) {
-        BIOS_Cmd_Handler();
-    }
+	if(data == 'b') {
+		s_is_receiving_cmd = 1;
+	}
+
+	if(s_is_receiving_cmd) {
+		s_cmd_buffer[s_received_count] = data;
+		++ s_received_count;
+		if((data == 'e') || (s_received_count >= BIOS_CMD_BUFFER_MAX_SIZE)) {
+			s_is_receiving_cmd = 0;
+			BIOS_Cmd_Handler();
+    	}
+	}
+    
 }
 
 static void BIOS_Cmd_Handler(void) {
     /*Disable Receiver*/
     UART0_RxEnable(0);
-    /*Check the validation of user command*/
-    if((s_cmd_buffer[0] == 'b') && (s_cmd_buffer[s_received_count - 1] == 'e')) {
-        /*Extract cmd and address*/
-        uint8_t* cmd = s_cmd_buffer + 1;  /*Skip the first character is <*/
-        uint8_t* value;
-        s_cmd_buffer[s_received_count - 1] = '\0'; 
+	/*Extract cmd and address*/
+	uint8_t* cmd = s_cmd_buffer + 1;  /*Skip the first character is <*/
+	uint8_t* value;
+	s_cmd_buffer[s_received_count - 1] = '\0'; 
 
-        /*Find the colon value*/
-        uint8_t* colon_position = strchr(s_cmd_buffer, ':');
+	/*Find the colon value*/
+	uint8_t* colon_position = strchr(s_cmd_buffer, ':');
 
-        if(colon_position != NULL) {
-            *colon_position = '\0';
-            value = colon_position + 1;
-        }
-        /*Handle the command*/
-        if(strcmp(cmd, CMD_dictionry[0]) == 0) {
-            /*Go to flash mode*/
-        	system_current_status = FLASH;
-        	BIOS_Reset_Cmd_Buffer();
+	if(colon_position != NULL) {
+		*colon_position = '\0';
+		value = colon_position + 1;
+	}
+	/*Handle the command*/
+	if(strcmp(cmd, CMD_dictionry[0]) == 0) {
+		/*Go to flash mode*/
+		system_current_status = FLASH;
+		BIOS_Reset_Cmd_Buffer();
 
-        } else if (strcmp(cmd, CMD_dictionry[1]) == 0) {
-            /*Erase application*/
-            BIOS_Erase_App(String2Hexa(value, strlen(value)));
-        } 
+	} else if (strcmp(cmd, CMD_dictionry[1]) == 0) {
+		/*Erase application*/
+		BIOS_Erase_App(String2Hexa(value, strlen(value)));
+	} 
 
-        else if (strcmp(cmd, CMD_dictionry[2]) == 0) {
-            /*Exit the bios*/
-            system_current_status = APPLICATION;
-			App_Info_t app_info;
-			App_Get_Info(String2Hexa(0, strlen(value)), &app_info);
-			s_jump_address = app_info.app_address;
-        }
+	else if (strcmp(cmd, CMD_dictionry[2]) == 0) {
+		/*Exit the bios*/
+		system_current_status = APPLICATION;
+		App_Info_t app_info;
+		App_Get_Info(String2Hexa(0, strlen(value)), &app_info);
+		s_jump_address = app_info.app_address;
+	}
 
-		else if (strcmp(cmd, CMD_dictionry[3]) == 0) {
-            /*GO to application*/
-            system_current_status = APPLICATION;
-			App_Info_t app_info;
-			App_Get_Info(String2Hexa(value, strlen(value)), &app_info);
-			s_jump_address = app_info.app_address;
+	else if (strcmp(cmd, CMD_dictionry[3]) == 0) {
+		/*GO to application*/
+		system_current_status = APPLICATION;
+		App_Info_t app_info;
+		App_Get_Info(String2Hexa(value, strlen(value)), &app_info);
+		s_jump_address = app_info.app_address;
 
-        } else {
-            UART0_SendString("Invalid command\n", 17, 0);
-        }
-    } else {
-        UART0_SendString("Invalid command\n", 17, 0);
-    }
+	} else {
+		UART0_SendString("Invalid command\n", 17, 0);
+	}
     
+	BIOS_Reset_Cmd_Buffer();
     if(system_current_status == BIOS) {
         /*Turn on RX for next Command*/
-        BIOS_Reset_Cmd_Buffer();
         UART0_ReceiveCharNonBlocking();
     }
 }
@@ -240,17 +244,19 @@ static void BIOS_Load(void) {
 	else {
 		UART0_SendString("LOAD DONE\n", sizeof("LOAD DONE"), 0);
 		App_Action(app_info, ADD);
-		App_Show();
-		/*return to BIOS mode*/
-		UART0_Update_Rx_Handler(&BIOS_Handler);
-		UART0_ReceiveCharNonBlocking();
 	}
+	App_Show();
+	/*return to BIOS mode*/
+	UART0_Update_Rx_Handler(&BIOS_Handler);
+	UART0_ReceiveCharNonBlocking();
 }
 
 static void BIOS_Erase_App(uint8_t app_idx) {
 	App_Info_t app_info = {0};
 	App_Get_Info(app_idx, &app_info);
-    if(((app_info.app_address >= 0x400) && (app_info.app_address < 0x7ff)) || (app_info.app_address <= first_empty_sector_address)){
+    if(((app_info.app_address >= 0x400) && (app_info.app_address < 0x7ff)) || \
+	    (app_info.app_address <= first_empty_sector_address)               ||  \
+		app_idx > App_Count()){
 		UART0_SendString(erase_error_mess, strlen(erase_error_mess), 0);
         return;
     } else {

@@ -7,7 +7,7 @@ F:\EMBEDDED\MCP\Programming\LeHungViet_MockPRJ\CMSIS/core_cm0plus.h:769:22:__NVI
 ../drivers/uart/Src/KL46_uart.c:196:18:UART0_SendString	48	static
 ../drivers/uart/Src/KL46_uart.c:212:18:UART0_ReceiveCharBlocking	24	static
 ../drivers/uart/Src/KL46_uart.c:230:6:UART0_ReceiveCharNonBlocking	8	static
-../drivers/uart/Src/KL46_uart.c:238:6:UART0_IRQHandler	8	static
-../drivers/uart/Src/KL46_uart.c:250:6:UART0_Update_Rx_Handler	16	static
-../drivers/uart/Src/KL46_uart.c:254:6:UART0_DeInit	8	static
-../drivers/uart/Src/KL46_uart.c:270:16:UART_Find_OSR	40	static
+../drivers/uart/Src/KL46_uart.c:240:6:UART0_IRQHandler	8	static
+../drivers/uart/Src/KL46_uart.c:252:6:UART0_Update_Rx_Handler	16	static
+../drivers/uart/Src/KL46_uart.c:256:6:UART0_DeInit	8	static
+../drivers/uart/Src/KL46_uart.c:272:16:UART_Find_OSR	40	static

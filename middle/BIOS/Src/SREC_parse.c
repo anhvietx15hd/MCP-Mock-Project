@@ -21,7 +21,6 @@
 #define START_OF_SECTOR(address)		((address & SECTOR_SIZE_CHECK_MASK) == 0)
 
 
-static char *mess = "FAIL TO FLASH\n";
 extern uint32_t first_empty_sector_address;
 
 static volatile SREC_Status_t status = SREC_START;
@@ -46,7 +45,8 @@ void SREC_Parse(uint8_t ch)
 			if (ch == 'S') {
 				status = SREC_TYPE;
 			} else {
-				status = SREC_S_ERROR;
+				UART0_RxEnable(0);
+				status = SREC_ERROR;
 				UART0_SendChar('5', 0);
 			}
 			break;
@@ -62,7 +62,8 @@ void SREC_Parse(uint8_t ch)
 			} else if (ch == '0') {
 				status = SREC_HEADER;
 			} else {
-				status = SREC_TYPE_ERROR;
+				UART0_RxEnable(0);
+				status = SREC_ERROR;
 				UART0_SendChar('4', 0);
 			}
 			break;
@@ -85,7 +86,8 @@ void SREC_Parse(uint8_t ch)
 					idx = address = 0;
 				} 
 			} else {
-				status = SREC_HEXA_ERROR;
+				UART0_RxEnable(0);
+				status = SREC_ERROR;
  				UART0_SendChar('3', 0);
 			}
 			break;
@@ -104,14 +106,16 @@ void SREC_Parse(uint8_t ch)
 					if (app_address == 0) {
 						app_address = address;
 						if(app_address < first_empty_sector_address) {
-							status = SREC_BOOT_CONFLIC;
+							UART0_RxEnable(0);
+							status = SREC_ERROR;
 							break;
 						}
 					}
 					/*Check if sector has been erased*/
 					if(START_OF_SECTOR(address)) {
 						if(Read_FlashAddress(address) != 0xFFFFFFFFU) {
-							status = SREC_APP_CONFLIC;
+							UART0_RxEnable(0);
+							status = SREC_ERROR;
 						} else {
 							app_size ++;
 						}
@@ -119,7 +123,8 @@ void SREC_Parse(uint8_t ch)
 					sum += (uint8_t)address + (uint8_t)(address >> 8) + (uint8_t)(address >> 16) + (uint8_t)(address >> 24);
 				}
 			} else {
-				status = SREC_HEXA_ERROR;
+				UART0_RxEnable(0);
+				status = SREC_ERROR;
 				UART0_SendChar('2', 0);
 			}
 			break;
@@ -152,7 +157,8 @@ void SREC_Parse(uint8_t ch)
 					}
 				}
 			} else {
-				status = SREC_HEXA_ERROR;
+				UART0_RxEnable(0);
+				status = SREC_ERROR;
 				UART0_SendChar('0', 0);
 			}
 			break;
@@ -168,12 +174,14 @@ void SREC_Parse(uint8_t ch)
 						idx = 0;
 						status = SREC_EOL;
 					} else {
-						status = SREC_CHECKSUM_ERROR;
+						UART0_RxEnable(0);
+						status = SREC_ERROR;
 						UART0_SendChar('s', 0);
 					}
 				}
 			} else {
-				status = SREC_HEXA_ERROR;
+				UART0_RxEnable(0);
+				status = SREC_ERROR;
 				UART0_SendChar('1', 0);
 			}
 			break;
@@ -199,11 +207,7 @@ void SREC_Parse(uint8_t ch)
 			break;
 	}
 
-	if (status >= SREC_ERROR)
-	{
-		UART0_RxEnable(0);
-		
-		UART0_SendString(mess, strlen(mess), 0);
+	if (status ==  SREC_ERROR) {
 		if (app_address) {
 			Erase_Multi_Sector(app_address, app_size);
 			app_address = 0;
@@ -226,7 +230,7 @@ uint8_t SREC_Load_Done(App_Info_t* app_info)
 		load_file_done = 0;
 
 	}
-	else if (status >= SREC_ERROR)
+	if (status == SREC_ERROR)
 	{
 		status = SREC_START;
 		app_info->app_address = 0;
